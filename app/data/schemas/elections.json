@@ -1,0 +1,125 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          115.9,
+          -32.4
+        ]
+      },
+      "properties": {
+        "name": "Canning By-election 2015",
+        "default_zoom_level": 10,
+        "has_division_boundaries": false
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          146.72,
+          -33
+        ]
+      },
+      "properties": {
+        "name": "New South Wales 2015",
+        "default_zoom_level": 6,
+        "has_division_boundaries": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          146,
+          -22
+        ]
+      },
+      "properties": {
+        "name": "Queensland Election 2015",
+        "default_zoom_level": 5,
+        "has_division_boundaries": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          144,
+          -37.7
+        ]
+      },
+      "properties": {
+        "name": "Victorian Election 2014",
+        "default_zoom_level": 7,
+        "has_division_boundaries": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          122,
+          -25
+        ]
+      },
+      "properties": {
+        "name": "WA Senate Election 2014",
+        "default_zoom_level": 5,
+        "has_division_boundaries": false
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          135,
+          -32
+        ]
+      },
+      "properties": {
+        "name": "South Australian Election 2014",
+        "default_zoom_level": 6,
+        "has_division_boundaries": false
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          146.5,
+          -42
+        ]
+      },
+      "properties": {
+        "name": "Tasmanian Election 2014",
+        "default_zoom_level": 7,
+        "has_division_boundaries": false
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          135,
+          -27
+        ]
+      },
+      "properties": {
+        "name": "Federal Election 2013",
+        "default_zoom_level": 5,
+        "has_division_boundaries": false
+      }
+    }
+  ]
+}

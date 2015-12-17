@@ -1,0 +1,50 @@
+<!--
+
+-->
+
+<!-- Custom elements -->
+<link rel="import" href="../polling-place-typeahead/polling-place-typeahead.html">
+<link rel="import" href="../polling-booth-card/polling-booth-card.html">
+<link rel="import" href="../polling-booth-card/polling-booth-card-editor.html">
+
+<dom-module id="polling-place-editor">
+  <style>
+  /*polling-booth-card {
+    margin-top: 40px;
+  }*/
+  </style>
+  <template>
+    <polling-place-typeahead election="{{election}}" on-polling-place-chosen="_onPollingPlaceChosen"></polling-place-typeahead>
+
+    <div id="spacer-oh-god-im-so-sorry" style="margin-bottom: 40px;" hidden></div>
+
+    <polling-booth-card booth="{{booth}}" hidden></polling-booth-card>
+    <polling-booth-card-editor booth="{{booth}}" on-booth-update="_onBoothUpdate" hidden></polling-booth-card-editor>
+  </template>
+</dom-module>
+
+<script>
+  (function() {
+    Polymer({
+      is: 'polling-place-editor',
+      _onPollingPlaceChosen: function(e, payload) {
+        this.booth = payload.pollingPlace;
+        console.log(this.booth);
+        document.querySelector('#spacer-oh-god-im-so-sorry').hidden = false;
+        document.querySelector('polling-booth-card').hidden = false;
+        document.querySelector('polling-booth-card-editor').hidden = false;
+      },
+      _onBoothUpdate: function() {
+        this.booth = null;
+        document.querySelector('#spacer-oh-god-im-so-sorry').hidden = true;
+        document.querySelector('polling-booth-card').hidden = true;
+        document.querySelector('polling-booth-card-editor').hidden = true;
+      },
+      properties: {
+        booth: {
+          type: Object
+        }
+      }
+    });
+  })();
+</script>

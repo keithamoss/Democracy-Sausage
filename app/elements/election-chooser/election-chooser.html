@@ -1,0 +1,66 @@
+<!--
+
+-->
+<!-- Iron elements -->
+<link rel="import" href="../../../bower_components/iron-ajax/iron-ajax.html">
+
+<!-- Paper elements -->
+<link rel="import" href="../../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
+
+<dom-module id="election-chooser">
+  <style>
+    paper-dropdown-menu, paper-listbox {
+      width: 100%;
+    }
+  </style>
+  <template>
+    <iron-ajax
+      auto
+      id="getElections"
+      url="https://democracy-sausage.cartodb.com/api/v2/sql"
+      params='{{ajaxParamsGetElections}}'
+      handle-as="json"
+      on-response="handleGetElectionsResponse"
+      on-error="handleGetElectionsError"></iron-ajax>
+
+    <paper-item>
+      <paper-dropdown-menu label="Choose an election">
+        <paper-listbox class="dropdown-content" on-iron-select="_onSelect" selected="0">
+          <template is="dom-repeat" items="{{elections}}" as="election">
+            <paper-item disabled="{{!election.db_table_name}}">{{election.name}}</paper-item>
+          </template>
+        </paper-listbox>
+      </paper-dropdown-menu>
+    </paper-item>
+  </template>
+</dom-module>
+
+<script>
+  (function() {
+    Polymer({
+      is: 'election-chooser',
+      ready: function() {
+        this.ajaxParamsGetElections = {
+          'q': 'SELECT *, ST_X(the_geom) as lng, ST_Y(the_geom) as lat FROM elections ORDER BY cartodb_id DESC'
+        };
+      },
+      handleGetElectionsResponse: function(e, request) {
+        this.elections = request.response.rows;
+        app.elections = this.elections;
+      },
+      handleGetElectionsError: function(e) {
+        // console.log(e);
+        alert('Bother, something went wrong.');
+      },
+      _onSelect: function(/*e, payload*/) {
+        app.election = this.elections[document.querySelector('paper-listbox').selected];
+        // console.log("_onSelect", app.election);
+      },
+      properties: {
+
+      }
+    });
+  })();
+</script>

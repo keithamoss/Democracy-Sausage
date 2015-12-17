@@ -1,0 +1,390 @@
+<!--
+
+-->
+
+<!-- Iron elements -->
+<link rel="import" href="../../../bower_components/iron-form/iron-form.html">
+
+<!-- Paper elements -->
+<link rel="import" href="../../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../bower_components/paper-spinner/paper-spinner.html">
+<link rel="import" href="../../../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../../bower_components/paper-styles/color.html">
+
+<!-- Neon elements -->
+<link rel="import" href="../../../bower_components/neon-animation/neon-animations.html">
+
+<dom-module id="pending-stalls">
+  <style>
+    paper-typeahead-input {
+      /*margin-bottom: 20px;*/
+    }
+
+    paper-card.main-card {
+      /*padding: 0px;*/
+      /*width: 100%;*/
+      /*margin-bottom: 16px;*/
+    }
+    .pink {
+      --paper-card-header-color: var(--paper-pink-500);
+    }
+    h3.pink {
+      color: var(--paper-pink-500);
+      margin-bottom: 0px;
+    }
+
+
+    paper-toggle-button {
+      /*margin-bottom: 20px;*/
+      padding: 10px;
+      /*display: block;*/
+    }
+    paper-toggle-button:nth-child(3) {
+      /*display: block;*/
+    }
+    paper-toggle-button:nth-last-child(-n+5) {
+      /*margin-bottom: 0px;*/
+    }
+    paper-toggle-button.blue {
+      --paper-toggle-button-checked-bar-color:  var(--paper-light-blue-500);
+      --paper-toggle-button-checked-button-color:  var(--paper-light-blue-500);
+      --paper-toggle-button-checked-ink-color: var(--paper-light-blue-500);
+      --paper-toggle-button-unchecked-bar-color:  var(--paper-light-blue-900);
+      --paper-toggle-button-unchecked-button-color:  var(--paper-light-blue-900);
+      --paper-toggle-button-unchecked-ink-color: var(--paper-light-blue-900);
+    }
+    paper-toggle-button.red {
+      --paper-toggle-button-checked-bar-color:  var(--paper-red-500);
+      --paper-toggle-button-checked-button-color:  var(--paper-red-500);
+      --paper-toggle-button-checked-ink-color: var(--paper-red-500);
+      --paper-toggle-button-unchecked-bar-color:  var(--paper-red-900);
+      --paper-toggle-button-unchecked-button-color:  var(--paper-red-900);
+      --paper-toggle-button-unchecked-ink-color: var(--paper-red-900);
+    }
+    paper-toggle-button.green {
+      --paper-toggle-button-checked-bar-color:  var(--paper-green-500);
+      --paper-toggle-button-checked-button-color:  var(--paper-green-500);
+      --paper-toggle-button-checked-ink-color: var(--paper-green-500);
+      --paper-toggle-button-unchecked-bar-color:  var(--paper-green-900);
+      --paper-toggle-button-unchecked-button-color:  var(--paper-green-900);
+      --paper-toggle-button-unchecked-ink-color: var(--paper-green-900);
+    }
+    paper-toggle-button.orange {
+      --paper-toggle-button-checked-bar-color:  var(--paper-orange-500);
+      --paper-toggle-button-checked-button-color:  var(--paper-orange-500);
+      --paper-toggle-button-checked-ink-color: var(--paper-orange-500);
+      --paper-toggle-button-unchecked-bar-color:  var(--paper-orange-900);
+      --paper-toggle-button-unchecked-button-color:  var(--paper-orange-900);
+      --paper-toggle-button-unchecked-ink-color: var(--paper-orange-900);
+    }
+
+
+    .booth-metadata .card-content {
+      padding-top: 0px;
+    }
+
+
+    .horizontal-section {
+      /*min-width: 130px;*/
+    }
+    paper-button {
+      /*display: block;*/
+      margin-bottom: 24px;
+    }
+    paper-button.colorful {
+      color: #4285f4;
+    }
+    paper-button[raised].colorful {
+      background: #4285f4;
+      color: #fff;
+    }
+    paper-button[toggles] {
+      transition: all 0.3s;
+    }
+    paper-button[toggles][active] {
+      background-color: rgba(0, 0, 0, 0.25);
+    }
+    paper-button[toggles][active].colorful {
+      background-color: rgba(66, 133, 244, 0.25);
+    }
+    paper-button[toggles][active][raised].colorful {
+      background-color: rgba(66, 133, 244, 0.75);
+    }
+
+
+    paper-spinner {
+      /*display: block;*/
+    }
+
+    /*#deliciousness-metrics .title-text {
+      padding-bottom: 0px;
+    }*/
+
+    .form-description {
+      /*padding-bottom: 20px;*/
+    }
+
+    paper-button {
+      margin-top: 20px;
+    }
+
+    #stalls-list-card {
+      width: 100%;
+      padding: 15px;
+    }
+  </style>
+  <template>
+    <!-- url="https://democracy-sausage.cartodb.com/api/v2/sql" -->
+    <iron-ajax
+      id="getPendingStallList"
+      url="http://v2.democracysausage.org/php/cartodb-api-bridge.php"
+      params='{{ajaxParamsPendingStallList}}'
+      handle-as="json"
+      on-response="handleResponse"
+      on-error="handleError"></iron-ajax>
+
+    <iron-ajax
+      id="getBoothInfo"
+      url="http://v2.democracysausage.org/php/cartodb-api-bridge.php"
+      params='{{ajaxParamsBoothInfo}}'
+      handle-as="json"
+      on-response="handleBoothInfoResponse"
+      on-error="handleBoothInfoError"></iron-ajax>
+
+    <iron-ajax
+      id="deleteStall"
+      url="http://v2.democracysausage.org/php/cartodb-api-bridge.php"
+      params='{{ajaxParamsDeleteStall}}'
+      handle-as="json"
+      on-response="handleDeleteStallResponse"
+      on-error="handleDeleteStallError"></iron-ajax>
+
+      <paper-toolbar>
+        <span class="title">Pending Stalls</span>
+        <paper-icon-button id="buttonDelete" icon="delete" on-click="_onDeleteButtonClick" hidden="{{stallListVisible}}"></paper-icon-button>
+        <paper-icon-button id="buttonClear" icon="clear" on-click="_onClearButtonClick" hidden="{{stallListVisible}}"></paper-icon-button>
+        <paper-icon-button id="buttonRefresh" icon="refresh" on-click="_onRefreshButtonClick" hidden="{{stallCardVisible}}"></paper-icon-button>
+      </paper-toolbar>
+
+      <paper-dialog id="actions"  entry-animation="scale-up-animation" exit-animation="fade-out-animation" modal>
+        <h2>Dialog Title</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <div class="buttons">
+          <paper-button dialog-dismiss>Cancel</paper-button>
+          <paper-button dialog-confirm autofocus on-tap="_onConfirmDeleteStallDialog">OK</paper-button>
+        </div>
+      </paper-dialog>
+
+      <div id="pendingStallsList">
+        <paper-card id="stalls-list-card" class="pink fancy">
+          <template is="dom-repeat" items="[[pendingStalls]]" as="stall">
+            <polling-booth-card-summary booth="[[stall]]" on-open-card="openPendingStall">
+            </polling-booth-card-summary>
+          </template>
+        </paper-card>
+      </div>
+
+      <div id="pendingStallsFullView" hidden>
+        <polling-booth-card booth="{{selectedBooth}}" stall="{{selectedStall}}"></polling-booth-card>
+        <polling-booth-card-editor booth="{{selectedBooth}}" on-booth-update="_onBoothUpdate"></polling-booth-card-editor>
+      </div>
+  </template>
+</dom-module>
+
+<script>
+  (function() {
+    Polymer({
+      is: 'pending-stalls',
+      ready: function() {
+        this.ajaxParamsPendingStallList = {
+          'q': 'SELECT * FROM pending_stalls'
+        };
+        // console.log(document.querySelector('#getPendingStallList'));
+        // document.querySelector('#getPendingStallList').generateRequest();
+        // this.selected = 0;
+
+        this.stallListVisible = true;
+        this.stallCardVisible = false;
+      },
+      // This is a horrid hack
+      _onShow: function() {
+        document.querySelector('#getPendingStallList').generateRequest();
+      },
+      handleResponse: function(e) {
+        // console.log(arguments);
+        // console.log(e.detail);
+        // console.log(e.detail.response);
+        this.pendingStalls = [];
+        this.pendingStalls = e.detail.response.rows;
+        // this.pendingStalls2 = e.detail.response.rows;
+        // console.log('handleResponse', this.pendingStalls);
+
+        // document.querySelector('paper-button').disabled = false;
+        // document.querySelector('paper-spinner').active = false;
+        // document.querySelector('paper-toast').open();
+      },
+      handleError: function(e, response) {
+        console.log(e);
+        // An error doesn't mean they're unauthorised per se, but let's make that nice later on
+        app._onUnauthorisedUser(response);
+      },
+      openPendingStall: function(e, payload) {
+        // console.log('openPendingStall', this.pendingStalls);
+        // console.log(payload);
+        // document.querySelector('iron-pages').select('add-stall')
+
+        this.selectedStall = payload.stall;
+
+        this.ajaxParamsBoothInfo = {
+          'q': 'SELECT *, ST_X(the_geom) as lng, ST_Y(the_geom) as lat FROM ' + app.election.db_table_name + ' WHERE cartodb_id = ' + this.selectedStall.polling_place_cartodb_id
+        };
+        document.querySelector('#getBoothInfo').generateRequest();
+      },
+      handleBoothInfoResponse: function(e, request) {
+        // document.querySelector('paper-spinner').active = false;
+        // document.querySelector('paper-toast').open();
+
+        this.selectedBooth = request.xhr.response.rows[0];
+
+        // this.selectedBooth.has_other = '{"coffee":true,"halal":false,"free_text":"Some words, like this!"}';
+        if(this.selectedBooth.has_other !== "") {
+          var has_other = JSON.parse(this.selectedBooth.has_other);
+          if (has_other) {
+            // console.log(has_other);
+            this.selectedBooth.has_other = {};
+            for (var key in has_other) {
+              // console.log(key);
+              this.selectedBooth.has_other['has_' + key] = has_other[key];
+            }
+          }
+        }
+        // console.log(this.selectedBooth.has_other);
+
+        // this.selectedBooth.has_bbq = true;
+        // console.log('handleBoothInfoResponse', this.selectedBooth, this.selectedStall);
+        document.querySelector('#pendingStallsList').hidden = true;
+        document.querySelector('#pendingStallsFullView').hidden = false;
+        this.stallListVisible = false;
+        this.stallCardVisible = true;
+        // console.log('gmap', this.selectedBooth.lat, this.selectedBooth.lng);
+        // document.querySelector('#polling-booth-card-gmap').fire('resize');
+        // console.log('handleBoothInfoResponse', this.pendingStalls);
+      },
+      handleBoothInfoError: function(e, response) {
+        console.log(e);
+        // An error doesn't mean they're unauthorised per se, but let's make that nice later on
+        app._onUnauthorisedUser(response);
+      },
+      _onClearButtonClick: function() {
+        // console.log('_onClearButtonClick', this.pendingStalls);
+        // console.log(this.pendingStalls2);
+        this.selectedStall = null;
+        this.selectedBooth = null;
+        document.querySelector('#pendingStallsList').hidden = false;
+        document.querySelector('#pendingStallsFullView').hidden = true;
+        this.stallListVisible = true;
+        this.stallCardVisible = false;
+      },
+      _onDeleteButtonClick: function() {
+        // console.log('_onDeleteButtonClick', this.selectedStall);
+        document.querySelector('#actions').open();
+      },
+      _onRefreshButtonClick: function() {
+        // console.log('_onRefreshButtonClick');
+        document.querySelector('#getPendingStallList').generateRequest();
+      },
+      _onConfirmDeleteStallDialog: function() {
+        // console.log('_onConfirmDeleteStallDialog', this.selectedStall.cartodb_id);
+        // e.preventDefault();
+        // return;
+
+        this.ajaxParamsDeleteStall = {
+          // Do nothing whilst testing
+          // 'q': 'SELECT * FROM pending_stalls LIMIT 1'
+          'q': 'DELETE FROM pending_stalls WHERE cartodb_id = ' + this.selectedStall.cartodb_id
+        };
+        document.querySelector('#deleteStall').generateRequest();
+      },
+      handleDeleteStallResponse: function() {
+        // document.querySelector('paper-spinner').active = false;
+        // document.querySelector('paper-toast').open();
+
+        // console.log('handleDeleteStallResponse');
+        this.selectedStall = null;
+        this.selectedBooth = null;
+
+        document.querySelector('#pendingStallsList').hidden = false;
+        document.querySelector('#pendingStallsFullView').hidden = true;
+        this.stallListVisible = true;
+        this.stallCardVisible = false;
+        this._onRefreshButtonClick();
+      },
+      handleDeleteStallError: function(e, response) {
+        console.log(e);
+        // An error doesn't mean they're unauthorised per se, but let's make that nice later on
+        app._onUnauthorisedUser(response);
+      },
+      _onBoothUpdate: function() {
+        // console.log("_onBoothUpdate");
+        this._onConfirmDeleteStallDialog();
+      },
+      properties: {
+        pendingStalls: {
+          type: Array,
+          notify: true
+        },
+        selectedStall: {
+          type: Object,
+          notify: true
+        },
+        selectedBooth: {
+          type: Object,
+          notify: true
+        }
+        // booth: {
+        //   boothName: {
+        //     type: String
+        //     // value: "Inner Sydney Montessori School"
+        //   },
+        //   premisesName: {
+        //     type: String
+        //     // value: "Inner Sydney Montessori School"
+        //   },
+        //   address: {
+        //     type: String
+        //     // value: "44 Smith Street, Balmain, 2041, NSW"
+        //   },
+        //   lat: {
+        //     type: Number
+        //     // value: "151.177569"
+        //   },
+        //   lon: {
+        //     type: Number
+        //     // value: "-33.862775"
+        //   },
+        //   division: {
+        //     type: String
+        //     // value: "Balmain"
+        //   },
+        //   stallName: {
+        //     type: String
+        //     // value: "Local Sportsball Club Sausage Sizzle"
+        //   },
+        //   stallURL: {
+        //     type: String
+        //     // value: "https://google.com"
+        //   },
+        //   stallDescription: {
+        //     type: String
+        //     // value: "Lorem ipsum dolor sit amet, ..."
+        //   }
+        // }
+      }
+    });
+  })();
+</script>

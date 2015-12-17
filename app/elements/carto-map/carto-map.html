@@ -1,0 +1,145 @@
+<!--
+
+-->
+
+<dom-module id="carto-map">
+  <style>
+    :host {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    #carto-map {
+      width: 100%;
+      height: 100%;
+      padding: 0px;
+      margin: 0px;
+    }
+  </style>
+  <template>
+    <div id="carto-map"></div>
+  </template>
+</dom-module>
+<script>
+  (function() {
+    Polymer({
+      is: 'carto-map',
+      properties: {
+        vizurl: {
+          type: String
+        },
+        viz: {
+          type: String,
+          observer: '_vizChanged'
+          // value: '4b63a4e6-110f-11e5-8ac5-0e8dde98a187'
+        },
+        username: {
+          type: String
+          // value:'stuartlynn'
+        },
+        lat: {
+          type: Number,
+          notify: true
+        },
+        zoom: {
+          type: Number,
+          notify: true
+        },
+        lng: {
+          type: Number,
+          notify: true
+        }
+      },
+      _vizChanged: function(newValue, oldValue) {
+        // This approach didn't work for some reason - the map never init'd
+        // console.log('this.$.map', this.$.map);
+        // this.$.map.remove();
+        // var toLocal = document.createElement('div');
+        // toLocal.id = 'map';
+        // Polymer.dom(this.root).appendChild(toLocal);
+
+        // Nuke the whole map and add anew
+        // Not sure if this is entirely the best way to nuke CartoDB maps
+        // (i.e. Does it cleanup for us intenrally on remove()?)
+        document.querySelector('#carto-map').remove();
+
+        var toLocal = document.createElement('div');
+        toLocal.id = 'carto-map';
+        Polymer.dom(this.root).appendChild(toLocal);
+
+        this.createVizJSON();
+      },
+      updateLoc: function() {
+        // console.log(this.lat, this.lng, this.zoom);
+        this.nativeMap.setView(new L.LatLng(this.lat, this.lng), this.zoom);
+      },
+      mapMoved: function(e) {
+        var center = this.nativeMap.getCenter();
+        this.lat = center.lat;
+        this.lng = center.lng;
+        // console.log(this.nativeMap.getCenter(), this.nativeMap.getZoom());
+      },
+      constructVizURL() {
+        return 'https://' + this.username + '.cartodb.com/api/v2/viz/' + this.viz + '/viz.json';
+      },
+      createVizJSON() {
+        var url = this.vizurl ? this.vizurl : this.constructVizURL();
+        // cartodb.createVis(this.$.map, url)
+        cartodb.createVis(document.querySelector('#carto-map'), url)
+          .done(function(map, layers) {
+            this.map = map;
+            this.nativeMap = map.getNativeMap();
+            this.nativeMap.on('move', this.mapMoved.bind(this));
+            this.updateLoc();
+
+            /*
+            Custom info windows in CartoDB are...interesting.
+
+            There are a variety of ways documented of how you set a custom info window,
+            and how varies on whether you're dynamically adding a layer or using a viz.json
+            pre-built on cartodb.com
+
+            NB: In future it may pay to build our own layers directly so we can (a) avoid the process of
+            creating a new map for each election (CartoCSS, SQL queries et cetera would all be defined in code),
+            (b) perhaps get custom info windows to work a little more nicely, (c) open up the options to do drilldown
+            querying, and (d) so we don't have to nuke the rebuild the CartoDB viz everytime we change elections.
+
+            - CartoDB Custom Interactivity Tutorial: http://docs.cartodb.com/tutorials/custom_interactivity/
+            - Custom Infowindows with createVis: https://groups.google.com/forum/#!msg/cartodb/eEYnfImDLjc/t1KiLxTKFyQJ
+            - CartoDB Hobbit Locations Example: https://github.com/CartoDB/cartodb.js/blob/2983b2fdcef914afdb1f4fdae173471143930452/examples/TheHobbitLocations/js/app.js
+            - CartoDB InfoWindow with Graph Example: https://github.com/CartoDB/cartodb.js/blob/2983b2fdcef914afdb1f4fdae173471143930452/examples/infowindow_with_graph.html
+
+            For the time being (to get something working) I've abused the ability for Mustache templates
+            to run JavaScript and taking care of all of the logic and view presentation in app.renderInfoWindow.
+
+            Eh, it works for now!
+            */
+
+            var subLayer = layers[1].getSubLayer(0);
+            // subLayer.set({ 'interactivity': ['cartodb_id', 'address', 'polling_place_name'] });
+            subLayer.setInteractivity('cartodb_id, polling_place_name, premises, state, address, booth_info, extra_info, division, has_bbq, ' +
+                                      'has_caek, has_nothing, has_run_out, has_other, source, stall_name, stall_description, stall_website');
+
+            subLayer.infowindow.set({
+              template: $('#infowindow_template').html(),
+              sanitizeTemplate: false
+            });
+
+            subLayer.on('featureClick', function(e, latlng, pos, data, layerNumber) {
+              app.infoWindowData = data;
+            });
+          }.bind(this));
+      },
+      constructBlankMap() {
+        /*var */map = new L.Map('map_canvas', {
+          center: [0,0],
+          zoom: 2
+        });
+      }
+    });
+  })();
+</script>
+
+<link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.15/themes/css/cartodb.css" />
+<script src="http://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.js"></script>

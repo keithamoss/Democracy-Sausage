@@ -1,0 +1,42 @@
+<!--
+
+-->
+
+<!-- Custom elements -->
+<link rel="import" href="../../../bower_components/paper-typeahead-input/paper-typeahead-input.html">
+
+<dom-module id="polling-place-typeahead">
+  <style>
+
+  </style>
+  <template>
+    <!-- https://democracy-sausage.cartodb.com/api/v2/sql?q=SELECT * FROM federal_election_2013_v2 WHERE premises ILIKE '%QUERY%25' OR polling_place_name ILIKE '%QUERY%25' OR address ILIKE '%QUERY%25' -->
+    <paper-typeahead-input remote-url="https://democracy-sausage.cartodb.com/api/v2/sql?q=SELECT *, ST_X(the_geom) as lng, ST_Y(the_geom) as lat FROM {{election.db_table_name}} WHERE premises ILIKE '%QUERY%25' OR polling_place_name ILIKE '%QUERY%25' OR address ILIKE '%QUERY%25'" remote-url-wait-ms="500" on-pt-remote-searching-responded="_onRemoteResponded" on-pt-item-confirmed="_onPollingPlaceChosen" remote-url-translate-response placeholder="Search for your polling place" max-suggestions="10" required={{required}} auto-validate="{{auto-validate}}" error-message="This field is required">
+    </paper-typeahead-input>
+  </template>
+</dom-module>
+
+<script>
+  (function() {
+    Polymer({
+      is: 'polling-place-typeahead',
+      _onRemoteResponded: function(e) {
+        // Translate from CartoDB to the expected "array of objects"
+        e.detail.remoteMatched = e.detail.remoteMatched.rows;
+      },
+      _onPollingPlaceChosen: function(e) {
+        this.fire('polling-place-chosen', {pollingPlace: e.detail.feature});
+      },
+      properties: {
+        required: {
+          type: Boolean,
+          value: false
+        },
+        autoValidate: {
+          type: Boolean,
+          value: false
+        }
+      }
+    });
+  })();
+</script>

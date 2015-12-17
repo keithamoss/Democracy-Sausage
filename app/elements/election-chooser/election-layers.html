@@ -1,0 +1,74 @@
+<!--
+
+-->
+<!-- Iron elements -->
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+
+<!-- Paper elements -->
+<link rel="import" href="../../../bower_components/paper-menu/paper-menu.html">
+
+<dom-module id="election-layers">
+  <style>
+    iron-icon {
+      margin-right: 33px;
+      opacity: 0.54;
+    }
+
+    .iron-selected {
+      color: var(--default-primary-color);
+    }
+
+    a {
+      @apply(--layout-horizontal);
+      @apply(--layout-center);
+      text-decoration: none;
+      color: var(--menu-link-color);
+      font-family: 'Roboto', 'Noto', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 24px;
+      min-height: 48px;
+      padding: 0 16px;
+    }
+  </style>
+  <template>
+    <a data-route="home" href="{{baseUrl}}">
+      <iron-icon icon="maps:layers"></iron-icon>
+      <span>Sausage Map</span>
+    </a>
+
+    <a data-route="admin" href="admin" disabled>
+      <iron-icon icon="maps:layers"></iron-icon>
+      <span>Heatmap</span>
+    </a>
+
+    <a data-route="admin" href="admin" disabled>
+      <iron-icon icon="maps:layers"></iron-icon>
+      <span>Divisions</span>
+    </a>
+
+    <a data-route="admin" href="admin" disabled>
+      <iron-icon icon="maps:layers"></iron-icon>
+      <span>Sausagelytics</span>
+    </a>
+  </template>
+</dom-module>
+
+<script>
+  (function() {
+    Polymer({
+      is: 'election-layers',
+      _onSelect: function(/*e, payload*/) {
+        app.election = this.elections[document.querySelector('paper-listbox').selected];
+        console.log('_onSelect', app.election);
+      },
+      properties: {
+        election: {
+          type: Object
+        }
+      }
+    });
+  })();
+</script>

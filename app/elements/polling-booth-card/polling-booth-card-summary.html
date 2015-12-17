@@ -1,0 +1,61 @@
+<!--
+
+-->
+
+<link rel="import" href="../../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../../bower_components/paper-ripple/paper-ripple.html">
+
+<dom-module id="polling-booth-card-summary">
+  <style>
+    /*:host {
+      display: block;
+      width:100%;
+      height:100%;
+    }*/
+
+    paper-card {
+      width: 275px;
+      margin-bottom: 16px;
+      cursor: pointer;
+    }
+
+    .pink {
+      --paper-card-header-color: var(--paper-pink-500);
+    }
+
+    .card-content {
+      padding-top: 0px;
+    }
+  </style>
+  <template>
+    <paper-card heading="{{booth.stall_name}}" class="pink" on-tap="openCard">
+      <paper-ripple center></paper-ripple>
+      <div class="card-content">
+        {{booth.polling_place_premises}}
+      </div>
+    </paper-card>
+  </template>
+</dom-module>
+
+<script>
+  (function() {
+    Polymer({
+      is: 'polling-booth-card-summary',
+      openCard: function() {
+        this.fire('open-card', {stall: this.booth});
+      },
+      properties: {
+        booth: {
+          boothName: {
+            type: String
+            // value: "4b63a4e6-110f-11e5-8ac5-0e8dde98a187"
+          },
+          stallName: {
+            type: String
+            // value: "4b63a4e6-110f-11e5-8ac5-0e8dde98a187"
+          }
+        }
+      }
+    });
+  })();
+</script>

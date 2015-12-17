@@ -1,0 +1,293 @@
+<!--
+
+-->
+<!-- Iron elements -->
+<link rel="import" href="../../../bower_components/iron-form/iron-form.html">
+
+<!-- Paper elements -->
+<link rel="import" href="../../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../bower_components/paper-spinner/paper-spinner.html">
+<link rel="import" href="../../../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../../../bower_components/paper-styles/color.html">
+
+<dom-module id="polling-booth-card-editor">
+  <style>
+    paper-card {
+      /*width: 100%;*/
+      display: block;
+      margin-bottom: 16px;
+    }
+    .pink {
+      --paper-card-header-color: var(--paper-pink-500);
+    }
+
+
+    paper-toggle-button {
+      margin-bottom: 20px;
+      padding: 10px;
+      /*display: block;*/
+    }
+    paper-toggle-button:nth-child(4) {
+      display: block;
+    }
+    paper-toggle-button:nth-last-child(-n+5) {
+      margin-bottom: 0px;
+    }
+    paper-toggle-button.blue {
+      --paper-toggle-button-checked-bar-color:  var(--paper-light-blue-500);
+      --paper-toggle-button-checked-button-color:  var(--paper-light-blue-500);
+      --paper-toggle-button-checked-ink-color: var(--paper-light-blue-500);
+      --paper-toggle-button-unchecked-bar-color:  var(--paper-light-blue-900);
+      --paper-toggle-button-unchecked-button-color:  var(--paper-light-blue-900);
+      --paper-toggle-button-unchecked-ink-color: var(--paper-light-blue-900);
+    }
+    paper-toggle-button.red {
+      --paper-toggle-button-checked-bar-color:  var(--paper-red-500);
+      --paper-toggle-button-checked-button-color:  var(--paper-red-500);
+      --paper-toggle-button-checked-ink-color: var(--paper-red-500);
+      --paper-toggle-button-unchecked-bar-color:  var(--paper-red-900);
+      --paper-toggle-button-unchecked-button-color:  var(--paper-red-900);
+      --paper-toggle-button-unchecked-ink-color: var(--paper-red-900);
+    }
+    paper-toggle-button.green {
+      --paper-toggle-button-checked-bar-color:  var(--paper-green-500);
+      --paper-toggle-button-checked-button-color:  var(--paper-green-500);
+      --paper-toggle-button-checked-ink-color: var(--paper-green-500);
+      --paper-toggle-button-unchecked-bar-color:  var(--paper-green-900);
+      --paper-toggle-button-unchecked-button-color:  var(--paper-green-900);
+      --paper-toggle-button-unchecked-ink-color: var(--paper-green-900);
+    }
+    paper-toggle-button.orange {
+      --paper-toggle-button-checked-bar-color:  var(--paper-orange-500);
+      --paper-toggle-button-checked-button-color:  var(--paper-orange-500);
+      --paper-toggle-button-checked-ink-color: var(--paper-orange-500);
+      --paper-toggle-button-unchecked-bar-color:  var(--paper-orange-900);
+      --paper-toggle-button-unchecked-button-color:  var(--paper-orange-900);
+      --paper-toggle-button-unchecked-ink-color: var(--paper-orange-900);
+    }
+
+
+    .booth-metadata .card-content {
+      padding-top: 0px;
+    }
+
+
+    .horizontal-section {
+      /*min-width: 130px;*/
+    }
+    paper-button {
+      /*display: block;*/
+      margin-bottom: 24px;
+    }
+    paper-button.colorful {
+      color: #4285f4;
+    }
+    paper-button[raised].colorful {
+      background: #4285f4;
+      color: #fff;
+    }
+    paper-button[toggles] {
+      transition: all 0.3s;
+    }
+    paper-button[toggles][active] {
+      background-color: rgba(0, 0, 0, 0.25);
+    }
+    paper-button[toggles][active].colorful {
+      background-color: rgba(66, 133, 244, 0.25);
+    }
+    paper-button[toggles][active][raised].colorful {
+      background-color: rgba(66, 133, 244, 0.75);
+    }
+
+
+    paper-spinner {
+      display: block;
+    }
+  </style>
+  <template>
+    <!-- url="https://democracy-sausage.cartodb.com/api/v2/sql" -->
+    <iron-ajax
+      id="updateBooth"
+      url="http://v2.democracysausage.org/php/cartodb-api-bridge.php"
+      params='{{ajaxParamsUpdateBooth}}'
+      handle-as="json"
+      on-response="handleUpdateBoothResponse"
+      on-error="handleUpdateBoothError"></iron-ajax>
+
+    <form is="iron-form" id="updateBoothForm">
+      <paper-card heading="Deliciousness Metrics" class="pink fancy">
+        <div class="card-content">
+          <div class="horizontal-section">
+            <paper-toggle-button name="hasBBQ" checked="{{booth.has_bbq}}" class="blue">BBQ</paper-toggle-button>
+            <paper-toggle-button name="hasCaek" checked="{{booth.has_caek}}" class="blue">Caek</paper-toggle-button>
+            <paper-toggle-button name="hasNothing" checked="{{booth.has_nothing}}" class="red" on-tap="_onTapHasNothing">Nowt</paper-toggle-button>
+            <paper-toggle-button name="hasRunOut" checked="{{booth.has_run_out}}" class="red">Runout</paper-toggle-button>
+            <paper-toggle-button name="hasCoffee" checked="{{booth.has_coffee}}" class="green">Coffee</paper-toggle-button>
+            <paper-toggle-button name="hasVego" checked="{{booth.has_vego}}" class="green">Vego Sausages</paper-toggle-button>
+            <paper-toggle-button name="hasHalal" checked="{{booth.has_halal}}" class="green">Halal</paper-toggle-button>
+            <paper-toggle-button name="hasBaconAndEggs" checked="{{booth.has_bacon_and_eggs}}" class="green">Bacon + Eggs</paper-toggle-button>
+
+            <paper-input name="hasFreeText" value="{{booth.has_free_text}}" label="What other types of delicious are here?"></paper-input>
+          </div>
+        </div>
+      </paper-card>
+
+      <paper-card heading="Metadata \m/" class="pink booth-metadata">
+        <div class="card-content">
+          <div class="horizontal-section">
+            <paper-input name="pollingPlaceType" value="{{booth.polling_place_type}}" label="What type of polling place is this?"></paper-input>
+          </div>
+
+          <div class="horizontal-section">
+            <paper-textarea name="extraInfo" value="{{booth.extra_info}}" label="Is there any extra information to add?"></paper-textarea>
+          </div>
+
+          <div class="horizontal-section">
+            <paper-input name="source" value="{{booth.source}}" label="What is the source? (e.g. Twitter, Facebook, School newsletter)"></paper-input>
+          </div>
+        </div>
+      </paper-card>
+
+      <paper-button tabindex="0" raised class="colorful" on-tap="submitSausage">Submit Sausagey Goodness</paper-button>
+      <paper-spinner id="spinner"></paper-spinner>
+    </form>
+
+    <!-- https://elements.polymer-project.org/elements/paper-toast -->
+    <paper-toast id="toast" text="Connection timed out. Showing limited messages.">
+      <!-- <span role="button" tabindex="0" style="color: #eeff41;margin: 10px" onclick="closeToast('#toast2')">Retry</span> -->
+    </paper-toast>
+  </template>
+</dom-module>
+
+<script>
+  (function() {
+    Polymer({
+      is: 'polling-booth-card-editor',
+      ready: function() {
+        // console.log("fire.something");
+        // console.log(this.fire('something', {stall: 1}));
+      },
+      // listeners: {
+      //   'special': '_onSpecial',
+      // },
+      _onSpecial: function() {
+        // console.log("_onSpecial");
+        // console.log(this.fire('something', {stall: 1}));
+        // console.log(document.querySelector("polling-booth-card-editor").fire('something', {stall: 1}));
+      },
+      _onTapHasNothing: function() {
+        // Well I'm not sure why this doesn't work..so ignoring it for now!
+        // The Polymer examples work fine setting document.querySelector('paper-toggle-button').checked = false
+        // But that doesn't work here...
+        if (this.booth.has_nothing) {
+          this.booth.has_bbq = false;
+          this.booth.has_caek = false;
+          console.log(this.booth.has_bbq, this.booth.has_caek, this.booth.has_nothing);
+        }
+      },
+      submitSausage: function() {
+        // this.that = this;
+        app.editor = this;
+        // console.log("app.editor", app.editor);
+        // this.fire('special', {stall: 1});
+        // this._fuckIt(1);
+        // return;
+
+        // console.log('submitSausage', this.booth);
+        // console.log(app.elections);
+
+        var has_other = {
+          'has_coffee': this.booth.has_coffee,
+          'has_vego': this.booth.has_vego,
+          'has_halal': this.booth.has_halal,
+          'has_bacon_and_eggs': this.booth.has_bacon_and_eggs,
+          'has_free_text': this.booth.has_free_text
+        };
+
+        var sql = 'UPDATE ' + app.election.db_table_name + ' SET has_bbq = ' + this.booth.has_bbq + ', has_caek = ' + this.booth.has_caek + ', ' +
+                  'has_nothing = ' + this.booth.has_nothing + ', has_run_out = ' + this.booth.has_run_out + ', has_other = \'' +
+                  JSON.stringify(has_other) + '\', polling_place_type = \'' + this.booth.polling_place_type + '\', extra_info = \'' +
+                  this.booth.extra_info + '\', source = \'' + this.booth.source + '\', latest_report = now()';
+
+        if (this.booth.first_report === null) {
+          console.log('first_report null');
+          sql += ', first_report = now()';
+        }
+
+        sql += ' WHERE cartodb_id = ' + this.booth.cartodb_id;
+
+        this.ajaxParamsUpdateBooth = {
+          'q':  sql
+        };
+
+        // console.log(this.booth.latest_report, this.booth.first_report);
+        // console.log(this.ajaxParamsUpdateBooth.q);
+
+        document.querySelector('#updateBooth').params = this.ajaxParamsUpdateBooth; // Be damned if I know why this data binding stopped working =/
+        document.querySelector('#updateBooth').generateRequest();
+
+        // this._fuckIt(2);
+
+        // console.log(this);
+      },
+      handleUpdateBoothResponse: function(/*e, request*/) {
+        // console.log('handleUpdateBoothResponse');
+        // console.log(e, request);
+
+        app.editor.fire('booth-update');
+
+        // this._fuckIt(3);
+
+        // console.log('fire.something #3');
+        // console.log(this.fire('something', {stall: 1}));
+
+        // document.querySelector('paper-spinner').active = false;
+        // document.querySelector('paper-toast').open();
+        // console.log('handleUpdateBoothResponse', this);
+        // console.log(this.fire('booth-update', {'blah': 1}));
+        // this.fire('something', {stall: 1});
+      },
+      handleUpdateBoothError: function(e, response) {
+        // alert('Bother, something went wrong. ' + request.error.message);
+        // An error doesn't mean they're unauthorised per se, but let's make that nice later on
+        app._onUnauthorisedUser(response);
+      },
+      properties: {
+        booth: {
+          has_bbq: {
+            type: Boolean,
+            notify: true
+          },
+          has_caek: {
+            type: Boolean,
+            notify: true
+          },
+          has_nothing: {
+            type: Boolean,
+            notify: true
+          },
+          has_runout: {
+            type: Boolean,
+            notify: true
+          },
+          has_other: {
+            type: String
+          },
+          polling_place_type: {
+            type: String
+          },
+          extra_info: {
+            type: String
+          },
+          source: {
+            type: String
+          }
+        }
+      }
+    });
+  })();
+</script>

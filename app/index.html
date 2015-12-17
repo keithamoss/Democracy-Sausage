@@ -1,0 +1,417 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<html lang="">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="generator" content="Democracy Sausage" />
+  <title>Democracy Sausage</title>
+  <!-- Place favicon.ico in the `app/` directory -->
+
+  <!-- Chrome for Android theme color -->
+  <meta name="theme-color" content="#2E3AA1">
+
+  <!-- Web Application Manifest -->
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Tile color for Win8 -->
+  <meta name="msapplication-TileColor" content="#3372DF">
+
+  <!-- Add to homescreen for Chrome on Android -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="PSK">
+  <!-- <link rel="icon" sizes="192x192" href="images/touch/chrome-touch-icon-192x192.png"> -->
+
+  <!-- Add to homescreen for Safari on iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Democracy Sausage">
+  <!-- <link rel="apple-touch-icon" href="images/touch/apple-touch-icon.png"> -->
+
+  <!-- Tile icon for Win8 (144x144) -->
+  <!-- <meta name="msapplication-TileImage" content="images/touch/ms-touch-icon-144x144-precomposed.png"> -->
+  <link rel="icon" href="favicon.ico" type="image/x-icon"/>
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
+
+  <!-- build:css styles/main.css -->
+  <link rel="stylesheet" href="styles/main.css">
+  <!-- endbuild-->
+
+  <!-- build:js bower_components/webcomponentsjs/webcomponents-lite.min.js -->
+  <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <!-- endbuild -->
+
+  <!-- will be replaced with elements/elements.vulcanized.html -->
+  <link rel="import" href="elements/elements.html">
+  <!-- endreplace-->
+
+  <!-- For shared styles, shared-styles.html import in elements.html -->
+  <style is="custom-style" include="shared-styles"></style>
+
+</head>
+
+<body unresolved class="fullbleed layout vertical">
+  <span id="browser-sync-binding"></span>
+  <template is="dom-bind" id="app">
+
+    <!-- <paper-drawer-panel id="paperDrawerPanel" style="overflow: scroll;"> -->
+    <paper-drawer-panel id="paperDrawerPanel">
+      <!-- Drawer Scroll Header Panel -->
+      <paper-header-panel drawer fixed>
+
+        <!-- Drawer Toolbar -->
+        <paper-toolbar id="drawerToolbar">
+          <!-- <span class="paper-font-title">Menu</span> -->
+        </paper-toolbar>
+
+        <!-- Drawer Content -->
+        <paper-menu class="list">
+          <election-chooser></election-chooser>
+          <!-- <election-layers election="{{election}}"></election-layers> -->
+
+          <a data-route="home" href="{{baseUrl}}" selected>
+            <iron-icon icon="maps:layers"></iron-icon>
+            <span>Sausage Map</span>
+          </a>
+
+          <a data-route="admin" href="admin" disabled>
+            <iron-icon icon="maps:layers"></iron-icon>
+            <span>Heatmap</span>
+          </a>
+
+          <!-- <a data-route="admin" href="admin" hidden="{{!election.has_division_boundaries}}"> -->
+          <a data-route="admin" href="admin" disabled>
+            <iron-icon icon="maps:layers"></iron-icon>
+            <span>Divisions</span>
+          </a>
+
+          <a data-route="admin" href="admin" disabled>
+            <iron-icon icon="maps:layers"></iron-icon>
+            <span>Sausagelytics</span>
+          </a>
+
+          <paper-toolbar id="drawerToolbar" hidden="{{!admin}}">
+            <span class="paper-font-title">Sausage Administration</span>
+          </paper-toolbar>
+
+          <a data-route="polling-place-editor" href="polling-place-editor" hidden="{{!admin}}">
+            <iron-icon icon="maps:rate-review"></iron-icon>
+            <span>Polling Place Editor</span>
+          </a>
+
+          <a data-route="pending-stalls" href="pending-stalls" hidden="{{!admin}}">
+            <iron-icon icon="maps:pin-drop"></iron-icon>
+            <span>Pending Stalls</span>
+          </a>
+
+          <hr>
+
+          <a data-route="login" href="login" hidden>
+            <span>Login</span>
+          </a>
+
+          <a data-route="add-stall" href="add-stall">
+            <iron-icon icon="maps:place"></iron-icon>
+            <span>Add Stall</span>
+          </a>
+
+          <a data-route="about-us" href="about-us">
+            <iron-icon icon="info-outline"></iron-icon>
+            <span>About Us</span>
+          </a>
+
+          <a href="http://www.redbubble.com/people/flyingblogspot/collections/357012-democracy-sausage">
+            <iron-icon icon="store"></iron-icon>
+            <span>Swag</span>
+          </a>
+
+          <a data-route="media" href="media">
+            <iron-icon icon="announcement"></iron-icon>
+            <span>Media</span>
+          </a>
+
+          <a href="https://twitter.com/DemSausage">
+            <iron-icon icon="social-post:twitter"></iron-icon>
+            <span>Twitter</span>
+          </a>
+
+          <a href="https://www.facebook.com/AusDemocracySausage">
+            <iron-icon icon="social-post:facebook"></iron-icon>
+            <span>Facebook</span>
+          </a>
+        </paper-menu>
+      </paper-header-panel>
+
+      <!-- Main Area -->
+      <!-- <paper-header-panel main id="headerPanelMain" condenses keep-condensed-header> -->
+      <paper-header-panel main mode="waterfall" class="flex">
+
+        <!-- Main Toolbar -->
+        <paper-toolbar id="mainToolbar">
+          <paper-icon-button id="paperToggle" icon="menu" paper-drawer-toggle></paper-icon-button>
+          <span class="flex"></span>
+
+          <!-- Toolbar icons -->
+          <paper-icon-button icon="search" disabled></paper-icon-button>
+          <paper-icon-button icon="maps:my-location" disabled></paper-icon-button>
+
+          <!-- Application name -->
+          <div class="middle middle-container center horizontal layout">
+            <div class="app-name">Democracy Sausage</div>
+          </div>
+
+          <!-- Application sub title -->
+          <!-- <div class="bottom bottom-container center horizontal layout">
+            <div class="bottom-title paper-font-subhead">The future of the web today</div>
+          </div> -->
+        </paper-toolbar>
+
+        <!-- Main Content -->
+        <div class="content fit">
+          <iron-pages attr-for-selected="data-route" selected="{{route}}">
+
+            <!-- <section data-route="home" style="height: 100vh;"> -->
+            <section data-route="home" class="content fit">
+              <!-- <div class="card image" elevation="3">
+                <paper-ripple recenters></paper-ripple>
+                Stuff
+              </div> -->
+
+              <!-- <paper-card style="width: 80px; height: 80px;" heading="Sausages" image="http://lorempixel.com/80/80/nature/" class="pink img" elevation="2">
+                <paper-ripple recenters></paper-ripple>
+              </paper-card>
+
+              <paper-card style="width: 80px; height: 80px;" heading="Heatmap" image="http://lorempixel.com/80/80/nature/" class="pink img" elevation="2">
+                <paper-ripple recenters></paper-ripple>
+              </paper-card>
+
+              <paper-card style="width: 80px; height: 80px;" heading="Divisions" image="http://lorempixel.com/80/80/nature/" class="pink img" elevation="2">
+                <paper-ripple recenters></paper-ripple>
+              </paper-card>
+
+              <paper-card style="width: 80px; height: 80px;" heading="Sausagelytics" image="http://lorempixel.com/80/80/nature/" class="pink img" elevation="2">
+                <paper-ripple recenters></paper-ripple>
+              </paper-card> -->
+
+              <carto-map username='democracy-sausage' viz='{{election.cartodb_map_id}}' zoom='{{election.default_zoom_level}}' lng='{{election.lng}}' lat='{{election.lat}}'></carto-map>
+            </section>
+
+            <section data-route="add-stall" class="add-stall">
+              <paper-material elevation="1" style="padding: 0px;">
+                <!-- <h2 class="page-title">Add Stall</h2> -->
+
+                <add-stall election="{{election}}"></add-stall>
+              </paper-material>
+            </section>
+
+            <section data-route="polling-place-editor">
+              <paper-material elevation="1">
+                <!-- <h2 class="page-title">Polling Place Editor</h2> -->
+
+                <polling-place-editor election="{{election}}"></polling-place-editor>
+              </paper-material>
+            </section>
+
+            <section data-route="pending-stalls" class="pending-stalls">
+              <pending-stalls></pending-stalls>
+            </section>
+
+            <section data-route="about-us" class="about-us">
+              <paper-material>
+                <h2 class="page-title">About Us</h2>
+
+                <h3>What?</h3>
+                A <a href="http://democracysausage.org">map</a> of sausage and cake availability on election day.
+
+                <h3>Why?</h3>
+                It's practically part of the Australian Constitution. Or something.
+
+                <h3>How?</h3>
+                <p>To let us know about sausage and cake availability (or the absence thereof), tweet using the hashtag <a href="https://twitter.com/intent/tweet?hashtags=democracysausage">#democracysausage</a>. We'll be watching.</p> <p>To make this work, we've also used:</p>
+
+                <ul>
+                  <li><a href="https://cartodb.com">CartoDB</a>;</li>
+                  <li><a href="https://polymer-project.org">Polymer</a>;</li>
+                  <li><a href="http://www.aec.gov.au/election/downloads.htm">AEC polling place data</a> (as well as from the various state electoral commissions);</li>
+                  <li>Images from <a href="http://openclipart.org">openclipart.org</a>; specifically: <a href="http://openclipart.org/detail/7983/red-+-green-ok-not-ok-icons-by-tzeeniewheenie">these tick and cross icons</a>, <a href="http://openclipart.org/detail/6165/sausage-by-mcol">this sausage icon</a> and <a href="http://openclipart.org/detail/181486/cake-by-vectorsme-181486">this cake icon</a> (with our acknowledgements and appreciation to the artists).</li>
+                </ul>
+
+                <h3>Who?</h3>
+                We're just an ordinary group of democracy sausage enthusiasts. Find us on Twitter: <a href="http://twitter.com/DemSausage">@DemSausage</a>. You can also email us at <a href="mailto: ausdemocracysausage@gmail.com">ausdemocracysausage@gmail.com</a>.
+
+                <h3>Who else?</h3>
+                We know of three other groups with similar (and possibly more organised) ambitions:
+
+                <ul>
+                  <li><a href="http://www.electionsausagesizzle.com.au/">Snag Votes – Election Sausage Sizzle Map</a></li>
+                  <li><a href="http://boothrev.net/">Booth reviews</a></li>
+                  <li><a href="https://www.facebook.com/AussieDemocracyonFacebook/app_596824103674208">Australian Democracy on Facebook - sausage sizzle ratings</a></li>
+                </ul>
+              </paper-material>
+            </section>
+
+            <section data-route="about-us" class="about-us">
+              <paper-material>
+                <h2 class="page-title">Media</h2>
+
+                Do you love sausage? We do!
+
+                <a href="http://democracysausage.org/media/Canning%20Press%20Release%20-%20DemSausage.pdf">Canning By-election Media Release</a>
+              </paper-material>
+            </section>
+
+            <section data-route="login" class="login">
+
+            </section>
+          </iron-pages>
+        </div>
+      </paper-header-panel>
+    </paper-drawer-panel>
+
+    <paper-toast id="toast">
+      <span class="toast-hide-button" role="button" tabindex="0" onclick="app.$.toast.hide()">Ok</span>
+    </paper-toast>
+
+    <!-- Uncomment next block to enable Service Worker support (1/2) -->
+    <!--
+    <paper-toast id="caching-complete"
+                 duration="6000"
+                 text="Caching complete! This app will work offline.">
+    </paper-toast>
+
+    <platinum-sw-register auto-register
+                          clients-claim
+                          skip-waiting
+                          on-service-worker-installed="displayInstalledToast">
+      <platinum-sw-cache default-cache-strategy="fastest"
+                         cache-config-file="cache-config.json">
+      </platinum-sw-cache>
+    </platinum-sw-register>
+    -->
+
+  </template>
+
+  <script>
+    app.admin = false;
+    if(window.location.hostname === "localhost" && window.location.port === "5000") {
+      app.admin = true;
+    }
+    if(document.cookie.indexOf("PHPSESSID=") === 0) {
+      // User has logged in at some point, so let's just assume their credentials are still good
+      // and let the PHP backend take care of verifying that later.
+      app.admin = true;
+    };
+
+    app._onUnauthorisedUser = function(response) {
+      if(response.request.status === 403) {
+        // Oh god I'm sorry
+        window.location = 'http://v2.democracysausage.org/php/login.php';
+      } else {
+        alert(response.error);
+      }
+    };
+
+    app.renderInfoWindow = function(data) {
+      var html = "";
+
+      html += "<h4>Deliciousness Available</h4><p>";
+      var noms = [];
+      if(data.has_nothing) {
+        noms.push("Nothing at all - <strong>Big red cross of shame!</strong>");
+      } else {
+        if(data.has_bbq) {
+          noms.push("Sausages");
+        }
+        if(data.has_caek) {
+          noms.push("Cake");
+        }
+
+        if(data.has_other) {
+          var other = JSON.parse(data.has_other);
+          for(k in other) {
+            if(other[k]) {
+              noms.push(other[k])
+            }
+          }
+        }
+      }
+
+      if(noms.length > 0) {
+        html += noms.join(", ");
+
+        if(data.has_run_out) {
+          noms.push(" - <strong>Oh no!</strong> Apparently the noms have already run out here!");
+        }
+      } else {
+        html += "<strong>Deliciousness unknown.</strong> Tweet using <a href='https://twitter.com/intent/tweet?text=" + data.premises + " " + data.state + "&hashtags=democracysausage'>#democracysausage</a> to let us know.";
+      }
+
+      html += "</p>";
+
+      if(data.extra_info) {
+        html += "<h4>Extra Information</h4> \
+                <p>" + data.extra_info + "</p>";
+      }
+
+      if(data.source) {
+        html += "<h4>Source</h4> \
+                <p>" + data.source + "</p>";
+      }
+
+      html += "<h4>Polling Place Name</h4> \
+              <p>" + data.polling_place_name + "</p> \
+              <h4>Address</h4> \
+              <p>" + data.address + "</p> \
+              <h4>Division</h4> \
+              <p>" + data.division + "</p>";
+
+      if(data.booth_info) {
+        html += "<h4>Booth Information</h4> \
+                <p>" + data.booth_info + "</p>";
+      }
+
+      if(data.stall_name) {
+        html += "<h4>stall Information</h4> \
+                <p>" + data.stall_name + "</p> \
+                <p>" + data.stall_description + "</p> \
+                <p>" + data.stall_website + "</p>";
+      }
+
+      return html;
+    };
+  </script>
+
+  <script type="infowindow/html" id="infowindow_template">
+    <div class="cartodb-popup header blue v2">
+      <a href="#close" class="cartodb-popup-close-button close">x</a>
+      <div class="cartodb-popup-header">
+        <h1>{{content.data.premises}}</h1>
+      </div>
+       <div class="cartodb-popup-content-wrapper">
+         <div class="cartodb-popup-content">
+          <script>
+            $(".cartodb-popup-content").html(app.renderInfoWindow(app.infoWindowData));
+          </script>
+         </div>
+       </div>
+   <div class="cartodb-popup-tip-container"></div>
+    </div>
+  </script>
+
+  <!-- build:js scripts/app.js -->
+  <script src="scripts/app.js"></script>
+  <!-- endbuild-->
+</body>
+
+</html>

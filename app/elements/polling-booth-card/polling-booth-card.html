@@ -1,0 +1,175 @@
+<!--
+
+-->
+
+<link rel="import" href="../../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../../bower_components/google-map/google-map.html">
+<link rel="import" href="../../../bower_components/google-map/google-map-marker.html">
+
+<dom-module id="polling-booth-card">
+  <style>
+    paper-card {
+      width: 100%;
+      margin-bottom: 16px;
+    }
+
+    google-map {
+      height: 200px;
+      width: 100%;
+    }
+
+    .fancy .title {
+      display: inline-block;
+      top: 30px;
+      left: 100px;
+      color: var(--paper-pink-500);
+      /*position: absolute;
+      top: 30px;
+      left: 100px;
+      color: var(--paper-indigo-500);*/
+    }
+    .fancy .big {
+      font-size: 22px;
+      padding: 8px 0 16px;
+      color: var(--google-grey-500);
+    }
+    .fancy .medium {
+      font-size: 16px;
+      padding-bottom: 8px;
+    }
+
+    .stallName {
+      margin-bottom: 8px;
+    }
+
+    .pink {
+      --paper-card-header-color: var(--paper-pink-500);
+      --paper-card-header-text: {
+        /*padding-bottom: 0px;*/
+      };
+    }
+
+    .more-info {
+      padding-top: 8px;
+    }
+
+
+    paper-button.green {
+      color: var(--paper-green-500);
+      --paper-button-flat-focus-color: var(--paper-green-50);
+    }
+  </style>
+  <template>
+    <paper-card heading="{{booth.polling_place_name}}" class="pink fancy">
+      <div class="card-content">
+        <div class="title">
+          <!-- <div class="medium">Inner Sydney Montessori School</div> -->
+          <div class="medium">{{booth.premises}}</div>
+        </div>
+      </div>
+      <!-- <template is="dom-if" if="{{boothAndPremisesNamesAreDifferent()}}">
+        <div class="card-content">
+          <div class="title">
+            <div class="medium">{{booth.premises}}</div>
+          </div>
+        </div>
+      </template> -->
+
+      <google-map id="polling-booth-card-gmap" class="data-entry" latitude="[[booth.lat]]" longitude="[[booth.lng]]" zoom="15">
+        <google-map-marker latitude="[[booth.lat]]" longitude="[[booth.lng]]"></google-map-marker>
+      </google-map>
+
+      <div class="card-content">
+        <div class="big">{{booth.division}}</div>
+        <div class="medium">{{booth.address}}</div>
+
+        <template is="dom-if" if="{{stall.has_bbq}}">
+          <paper-button tabindex="0" class="green ripple"><iron-icon icon="check"></iron-icon>BBQ</paper-button>
+        </template>
+        <template is="dom-if" if="{{stall.has_caek}}">
+          <paper-button tabindex="0" class="green ripple"><iron-icon icon="check"></iron-icon>Caek</paper-button>
+        </template>
+        <template is="dom-if" if="{{stall.has_vego}}">
+          <paper-button tabindex="0" class="green ripple"><iron-icon icon="check"></iron-icon>Vego</paper-button>
+        </template>
+        <template is="dom-if" if="{{stall.has_halal}}">
+          <paper-button tabindex="0" class="green ripple"><iron-icon icon="check"></iron-icon>Halal</paper-button>
+        </template>
+
+        <h3 class="stallName">{{stall.stall_name}}</h3>
+        <div class="small">{{stall.stall_description}}</div>
+        <template is="dom-if" if="{{stall.stall_website}}">
+          <div class="small more-info">More information: <a href="{{stall.stall_website}}">{{stall.stall_website}}</a></div>
+        </template>
+        {{stall.contact_email}}
+      </div>
+    </paper-card>
+  </template>
+</dom-module>
+
+<script>
+  (function() {
+    Polymer({
+      is: 'polling-booth-card',
+      properties: {
+        // stall: {
+        //
+        // },
+        booth: {
+          type: Object,
+          observer: '_boothChanged'
+          // boothName: {
+          //   type: String
+          //   // value: "Inner Sydney Montessori School"
+          // },
+          // premisesName: {
+          //   type: String
+          //   // value: "Inner Sydney Montessori School"
+          // },
+          // address: {
+          //   type: String
+          //   // value: "44 Smith Street, Balmain, 2041, NSW"
+          // },
+          // lat: {
+          //   type: Number
+          //   // value: "151.177569"
+          // },
+          // lon: {
+          //   type: Number
+          //   // value: "-33.862775"
+          // },
+          // division: {
+          //   type: String
+          //   // value: "Balmain"
+          // },
+          // stallName: {
+          //   type: String
+          //   // value: "Local Sportsball Club Sausage Sizzle"
+          // },
+          // stallURL: {
+          //   type: String
+          //   // value: "https://google.com"
+          // },
+          // stallDescription: {
+          //   type: String
+          //   // value: "Lorem ipsum dolor sit amet, ..."
+          // }
+        },
+      },
+      _boothChanged: function(/*newValue, oldValue*/) {
+        // Apparently we need to wait a little while after the booth prop changes
+        window.setTimeout(function() {
+          document.querySelector('#polling-booth-card-gmap').fire('resize');
+        }, 250);
+      }
+      // boothAndPremisesNamesAreDifferent: function() {
+      //   console.log("boothAndPremisesNamesAreDifferent");
+      //   if(this.booth) {
+      //     console.log(this.booth.polling_place_name, this.booth.premises);
+      //     return this.booth.polling_place_name !== this.booth.premises;
+      //   }
+      //   return false;
+      // }
+    });
+  })();
+</script>

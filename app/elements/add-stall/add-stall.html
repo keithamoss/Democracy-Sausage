@@ -1,0 +1,285 @@
+<!--
+
+-->
+
+<!-- Iron elements -->
+<link rel="import" href="../../../bower_components/iron-form/iron-form.html">
+
+<!-- Paper elements -->
+<link rel="import" href="../../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../bower_components/paper-spinner/paper-spinner.html">
+<link rel="import" href="../../../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../../../bower_components/paper-styles/color.html">
+
+<!-- Custom elements -->
+<link rel="import" href="../../../bower_components/paper-typeahead-input/paper-typeahead-input.html">
+
+<dom-module id="add-stall">
+  <style>
+    paper-typeahead-input {
+      /*margin-bottom: 20px;*/
+    }
+
+    paper-card.main-card {
+      /*padding: 0px;*/
+      /*width: 100%;*/
+      /*margin-bottom: 16px;*/
+    }
+    .pink {
+      --paper-card-header-color: var(--paper-pink-500);
+    }
+    h3.pink {
+      color: var(--paper-pink-500);
+      margin-bottom: 0px;
+    }
+
+
+    paper-toggle-button {
+      /*margin-bottom: 20px;*/
+      padding: 10px;
+      /*display: block;*/
+    }
+    paper-toggle-button:nth-child(3) {
+      /*display: block;*/
+    }
+    paper-toggle-button:nth-last-child(-n+5) {
+      /*margin-bottom: 0px;*/
+    }
+    paper-toggle-button.blue {
+      --paper-toggle-button-checked-bar-color:  var(--paper-light-blue-500);
+      --paper-toggle-button-checked-button-color:  var(--paper-light-blue-500);
+      --paper-toggle-button-checked-ink-color: var(--paper-light-blue-500);
+      --paper-toggle-button-unchecked-bar-color:  var(--paper-light-blue-900);
+      --paper-toggle-button-unchecked-button-color:  var(--paper-light-blue-900);
+      --paper-toggle-button-unchecked-ink-color: var(--paper-light-blue-900);
+    }
+    paper-toggle-button.red {
+      --paper-toggle-button-checked-bar-color:  var(--paper-red-500);
+      --paper-toggle-button-checked-button-color:  var(--paper-red-500);
+      --paper-toggle-button-checked-ink-color: var(--paper-red-500);
+      --paper-toggle-button-unchecked-bar-color:  var(--paper-red-900);
+      --paper-toggle-button-unchecked-button-color:  var(--paper-red-900);
+      --paper-toggle-button-unchecked-ink-color: var(--paper-red-900);
+    }
+    paper-toggle-button.green {
+      --paper-toggle-button-checked-bar-color:  var(--paper-green-500);
+      --paper-toggle-button-checked-button-color:  var(--paper-green-500);
+      --paper-toggle-button-checked-ink-color: var(--paper-green-500);
+      --paper-toggle-button-unchecked-bar-color:  var(--paper-green-900);
+      --paper-toggle-button-unchecked-button-color:  var(--paper-green-900);
+      --paper-toggle-button-unchecked-ink-color: var(--paper-green-900);
+    }
+    paper-toggle-button.orange {
+      --paper-toggle-button-checked-bar-color:  var(--paper-orange-500);
+      --paper-toggle-button-checked-button-color:  var(--paper-orange-500);
+      --paper-toggle-button-checked-ink-color: var(--paper-orange-500);
+      --paper-toggle-button-unchecked-bar-color:  var(--paper-orange-900);
+      --paper-toggle-button-unchecked-button-color:  var(--paper-orange-900);
+      --paper-toggle-button-unchecked-ink-color: var(--paper-orange-900);
+    }
+
+
+    .booth-metadata .card-content {
+      padding-top: 0px;
+    }
+
+
+    .horizontal-section {
+      /*min-width: 130px;*/
+    }
+    paper-button {
+      /*display: block;*/
+      margin-bottom: 24px;
+    }
+    paper-button.colorful {
+      color: #4285f4;
+    }
+    paper-button[raised].colorful {
+      background: #4285f4;
+      color: #fff;
+    }
+    paper-button[toggles] {
+      transition: all 0.3s;
+    }
+    paper-button[toggles][active] {
+      background-color: rgba(0, 0, 0, 0.25);
+    }
+    paper-button[toggles][active].colorful {
+      background-color: rgba(66, 133, 244, 0.25);
+    }
+    paper-button[toggles][active][raised].colorful {
+      background-color: rgba(66, 133, 244, 0.75);
+    }
+
+
+    paper-spinner {
+      /*display: block;*/
+    }
+
+    /*#deliciousness-metrics .title-text {
+      padding-bottom: 0px;
+    }*/
+
+    .form-description {
+      /*padding-bottom: 20px;*/
+    }
+
+    paper-button {
+      margin-top: 20px;
+    }
+  </style>
+  <template>
+    <paper-card heading="Thank you" class="pink" id="thanksCard" elevation="0" hidden>
+      <div class="card-content">
+        Thanks for letting us know about your stall! It will appear on the map once we've verified it.
+      </div>
+    </paper-card>
+
+    <paper-card heading="{{election.name}} - Add your sausage sizzle or cake stall" class="pink main-card" id="addStallCard" elevation="0">
+      <div class="card-content">
+        <div class="form-description">Please complete the form below to add your stall to the map. Please do not submit entries that are offensive, political or do not relate to an election day stall. Please also make sure that you have authorisation to run your fundraising event at the polling place. All entries are moderated and subject to approval. If your polling booth is not in the list, then it may have already been added to the map.</div>
+
+        <form is="iron-form" id="form" method="post" action="/form/handler">
+          <polling-place-typeahead election="{{election}}" on-polling-place-chosen="_onPollingPlaceChosen" required auto-validate>
+          </polling-place-typeahead>
+
+          <!-- <paper-typeahead-input remote-url="https://democracy-sausage.cartodb.com/api/v2/sql?q=SELECT * FROM federal_election_2013_v2 WHERE premises ILIKE '%QUERY%25' OR polling_place_name ILIKE '%QUERY%25' OR address ILIKE '%QUERY%25'" remote-url-wait-ms="500" on-pt-remote-searching-responded="translateCartoDBResponse" on-pt-item-confirmed="_onPollingPlaceChosen" remote-url-translate-response placeholder="Search for your polling place" max-suggestions="10" required auto-validate error-message="This field is required">
+          </paper-typeahead-input> -->
+
+          <paper-input name="stallName" value="{{stallName}}" label="Stall Name" placeholder="e.g. Primary school sausage sizzle" required auto-validate error-message="This field is required"></paper-input>
+          <paper-input name="stallDescription" value="{{stallDescription}}" label="Stall Description" placeholder="e.g. Sausages, bread rolls, drinks to fund the local cricket team" required auto-validate error-message="This field is required"></paper-input>
+
+          <paper-card class="pink fancy" id="deliciousness-metrics" elevation="0">
+            <div class="card-title">
+              <h3 class="pink">Deliciousness Metrics</h3>
+            </div>
+
+            <div class="card-content">
+              <div class="horizontal-section">
+                <paper-toggle-button name="hasBBQ" checked="{{hasBBQ}}">Is this a sausage sizzle?</paper-toggle-button>
+                <paper-toggle-button name="hasCaek" checked="{{hasCaek}}">Is this a cake stall?</paper-toggle-button>
+                <paper-toggle-button name="hasVego" checked="{{hasVego}}">Are there vegetarian options?</paper-toggle-button>
+                <paper-toggle-button name="hasHalal" checked="{{hasHalal}}">Are there halal options?</paper-toggle-button>
+              </div>
+            </div>
+          </paper-card>
+
+          <paper-input name="stallWebsite" value="{{stallWebsite}}" label="Website" placeholder="A link is included on your individual stall page back to your site"></paper-input>
+          <paper-input name="contactEmail" value="{{contactEmail}}" label="Contact Email" placeholder="Include your email if you want to be notified when your submission is approved"></paper-input>
+
+          <paper-button tabindex="0" raised class="colorful" on-tap="submitStall">Submit Your Stall</paper-button>
+          <!-- url="https://democracy-sausage.cartodb.com/api/v2/sql" -->
+          <iron-ajax
+            url="http://v2.democracysausage.org/php/cartodb-api-bridge.php"
+            params='{{ajaxParams}}'
+            handle-as="json"
+            on-response="handleResponse"
+            on-error="handleError"></iron-ajax>
+
+          <paper-spinner id="spinner"></paper-spinner>
+          <!-- https://elements.polymer-project.org/elements/paper-toast -->
+          <paper-toast duration="10000" text="Stall information received. Sausagelicious!">
+            <!-- <span role="button" tabindex="0" style="color: #eeff41;margin: 10px" onclick="closeToast('#toast2')">Retry</span> -->
+          </paper-toast>
+        </form>
+      </div>
+    </paper-card>
+  </template>
+</dom-module>
+
+<script>
+  (function() {
+    Polymer({
+      is: 'add-stall',
+      translateCartoDBResponse: function(e) {
+        e.detail.remoteMatched = e.detail.remoteMatched.rows;
+      },
+      _onPollingPlaceChosen: function(e, payload) {
+        console.log('pollingPlaceChosen', payload);
+        this.pollingPlaceCartoDBId = payload.pollingPlace.cartodb_id;
+        this.pollingPlacePremises = payload.pollingPlace.premises;
+
+        console.log('pollingPlaceChosen', this.pollingPlaceCartoDBId, this.pollingPlacePremises);
+      },
+      submitStall: function(e) {
+        e.preventDefault();
+
+        if (isNaN(this.pollingPlaceCartoDBId)) {
+          var typeaheadPaperInput = document.querySelector('paper-typeahead-input paper-input');
+          typeaheadPaperInput.value = '';
+          typeaheadPaperInput.validate();
+        }
+
+        if (document.querySelector('#form').validate() === true) {
+          document.querySelector('paper-button').disabled = true;
+          document.querySelector('paper-spinner').active = true;
+
+          this.ajaxParams = {
+            'add-stall': true,
+            'q': '(elections_cartodb_id, polling_place_cartodb_id, polling_place_premises, stall_name, stall_description, stall_website, contact_email, has_bbq, ' +
+                  'has_caek, has_vego, has_halal) VALUES (' + app.election.cartodb_id + ', \'' + this.pollingPlaceCartoDBId + '\', \'' + this.pollingPlacePremises + '\', \'' +
+                  this.stallName + '\', \'' + this.stallDescription + '\', \'' + this.stallWebsite + '\', \'' + this.contactEmail + '\', ' + this.hasBBQ + ', ' +
+                  this.hasCaek + ', ' + this.hasVego + ', ' + this.hasHalal + ')'
+          };
+          document.querySelector('iron-ajax').generateRequest();
+        }
+      },
+      handleResponse: function() {
+        // document.querySelector("paper-button").disabled = false;
+        document.querySelector('paper-spinner').active = false;
+        document.querySelector('paper-toast').open();
+        document.querySelector('#thanksCard').hidden = false;
+        document.querySelector('#addStallCard').hidden = true;
+      },
+      handleError: function(e, response) {
+        console.log(e);
+        // An error doesn't mean they're unauthorised per se, but let's make that nice later on
+        app._onUnauthorisedUser(response);
+      },
+      properties: {
+        // booth: {
+        //   boothName: {
+        //     type: String
+        //     // value: "Inner Sydney Montessori School"
+        //   },
+        //   premisesName: {
+        //     type: String
+        //     // value: "Inner Sydney Montessori School"
+        //   },
+        //   address: {
+        //     type: String
+        //     // value: "44 Smith Street, Balmain, 2041, NSW"
+        //   },
+        //   lat: {
+        //     type: Number
+        //     // value: "151.177569"
+        //   },
+        //   lon: {
+        //     type: Number
+        //     // value: "-33.862775"
+        //   },
+        //   division: {
+        //     type: String
+        //     // value: "Balmain"
+        //   },
+        //   stallName: {
+        //     type: String
+        //     // value: "Local Sportsball Club Sausage Sizzle"
+        //   },
+        //   stallURL: {
+        //     type: String
+        //     // value: "https://google.com"
+        //   },
+        //   stallDescription: {
+        //     type: String
+        //     // value: "Lorem ipsum dolor sit amet, ..."
+        //   }
+        // }
+      }
+    });
+  })();
+</script>
