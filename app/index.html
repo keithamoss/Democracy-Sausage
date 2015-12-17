@@ -110,10 +110,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <span>Polling Place Editor</span>
           </a>
 
-          <a data-route="pending-stalls" href="pending-stalls" hidden="{{!admin}}">
+          <a data-route="pending-stalls" href="pending-stalls" id="pending-stalls" hidden="{{!admin}}">
             <iron-icon icon="maps:pin-drop"></iron-icon>
             <span>Pending Stalls</span>
           </a>
+          <paper-badge for="pending-stalls" label="{{pendingStallsCount}}" hidden="{{!admin}}">
+          </paper-badge>
 
           <hr>
 
@@ -312,6 +314,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       // and let the PHP backend take care of verifying that later.
       app.admin = true;
     };
+
+    // Populate the pending stalls badge
+    app.pendingStallsCount = "";
+    if(app.admin === true) {
+      window.setTimeout(function() {
+        document.querySelector('pending-stalls')._onShow();
+      }, 500);
+    }
+
 
     app._onUnauthorisedUser = function(response) {
       if(response.request.status === 403) {

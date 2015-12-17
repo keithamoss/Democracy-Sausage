@@ -221,6 +221,8 @@
         // console.log(e.detail.response);
         this.pendingStalls = [];
         this.pendingStalls = e.detail.response.rows;
+        app.pendingStallsCount = e.detail.response.rows.length;
+
         // this.pendingStalls2 = e.detail.response.rows;
         // console.log('handleResponse', this.pendingStalls);
 
@@ -317,6 +319,7 @@
         // console.log('handleDeleteStallResponse');
         this.selectedStall = null;
         this.selectedBooth = null;
+        app.pendingStallsCount--;
 
         document.querySelector('#pendingStallsList').hidden = false;
         document.querySelector('#pendingStallsFullView').hidden = true;

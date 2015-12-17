@@ -55,7 +55,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     page('/pending-stalls', function() {
       // This feels like a horrid hack
-      document.querySelector('#getPendingStallList').generateRequest();
+      document.querySelector('pending-stalls')._onShow();
       app.route = 'pending-stalls';
     });
 
