@@ -1,8 +1,6 @@
 node_modules
 dist
 bower_components
-app/php/sausage_secrets.inc
-app/php/client_secrets.inc
 .tmp
 .publish/
 gulpfile.js
