@@ -8,3 +8,10 @@ app/php/client_secrets.inc
 gulpfile.js
 php/
 TODO.md
+
+# POC Layouts
+poc-layouts/
+poc-*.html
+
+# Neon Animation POCs
+app/elements/*/neon/*
