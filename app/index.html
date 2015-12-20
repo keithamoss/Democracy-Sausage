@@ -213,7 +213,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <paper-material elevation="1" style="padding: 0px;">
                 <!-- <h2 class="page-title">Add Stall</h2> -->
 
-                <add-stall election="{{election}}"></add-stall>
+                <add-stall election="{{currentElection}}"></add-stall>
               </paper-material>
             </section>
 
@@ -305,6 +305,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </template>
 
   <script>
+    app.currentElection = null;
+
     app.admin = false;
     if(window.location.hostname === "localhost" && window.location.port === "5000") {
       app.admin = true;

@@ -49,6 +49,14 @@
       handleGetElectionsResponse: function(e, request) {
         this.elections = request.response.rows;
         app.elections = this.elections;
+
+        // Assume for now that we only ever have one election active at a time
+        for(var key in this.elections) {
+          if(this.elections[key].is_active === true) {
+            app.currentElection = this.elections[key];
+            return;
+          }
+        }
       },
       handleGetElectionsError: function(e) {
         // console.log(e);
@@ -59,7 +67,10 @@
         // console.log("_onSelect", app.election);
       },
       properties: {
-
+        // selectedElection: {
+        //   type: String,
+        //   notify: true
+        // }
       }
     });
   })();

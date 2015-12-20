@@ -1,4 +1,4 @@
-the_geom,name,default_zoom_level,has_division_boundaries,db_table_name
+the_geom,name,default_zoom_level,has_division_boundaries,db_table_name,is_active
 0101000020E61000000000000000E060400000000000003BC0,Federal Election 2013,5,FALSE,federal_2013_polling_places
 0101000020E6100000FFFFFFFFFF4F624000000000000045C0,Tasmanian Election 2014,7,FALSE,
 0101000020E61000000000000000E0604000000000000040C0,South Australian Election 2014,6,FALSE,

@@ -133,61 +133,71 @@
     }
   </style>
   <template>
-    <paper-card heading="Thank you" class="pink" id="thanksCard" elevation="0" hidden>
-      <div class="card-content">
-        Thanks for letting us know about your stall! It will appear on the map once we've verified it.
-      </div>
-    </paper-card>
+    <template is="dom-if" if="{{election}}">
+      <paper-card heading="Thank you" class="pink" id="thanksCard" elevation="0" hidden>
+        <div class="card-content">
+          Thanks for letting us know about your stall! It will appear on the map once we've verified it.
+        </div>
+      </paper-card>
 
-    <paper-card heading="{{election.name}} - Add your sausage sizzle or cake stall" class="pink main-card" id="addStallCard" elevation="0">
-      <div class="card-content">
-        <div class="form-description">Please complete the form below to add your stall to the map. Please do not submit entries that are offensive, political or do not relate to an election day stall. Please also make sure that you have authorisation to run your fundraising event at the polling place. All entries are moderated and subject to approval. If your polling booth is not in the list, then it may have already been added to the map.</div>
+      <paper-card heading="{{election.name}} - Add your sausage sizzle or cake stall" class="pink main-card" id="addStallCard" elevation="0">
+        <div class="card-content">
+          <div class="form-description">Please complete the form below to add your stall to the map. Please do not submit entries that are offensive, political or do not relate to an election day stall. Please also make sure that you have authorisation to run your fundraising event at the polling place. All entries are moderated and subject to approval. If your polling booth is not in the list, then it may have already been added to the map.</div>
 
-        <form is="iron-form" id="form" method="post" action="/form/handler">
-          <polling-place-typeahead election="{{election}}" on-polling-place-chosen="_onPollingPlaceChosen" required auto-validate>
-          </polling-place-typeahead>
+          <form is="iron-form" id="form" method="post" action="/form/handler">
+            <polling-place-typeahead election="{{election}}" on-polling-place-chosen="_onPollingPlaceChosen" required auto-validate>
+            </polling-place-typeahead>
 
-          <!-- <paper-typeahead-input remote-url="https://democracy-sausage.cartodb.com/api/v2/sql?q=SELECT * FROM federal_election_2013_v2 WHERE premises ILIKE '%QUERY%25' OR polling_place_name ILIKE '%QUERY%25' OR address ILIKE '%QUERY%25'" remote-url-wait-ms="500" on-pt-remote-searching-responded="translateCartoDBResponse" on-pt-item-confirmed="_onPollingPlaceChosen" remote-url-translate-response placeholder="Search for your polling place" max-suggestions="10" required auto-validate error-message="This field is required">
-          </paper-typeahead-input> -->
+            <!-- <paper-typeahead-input remote-url="https://democracy-sausage.cartodb.com/api/v2/sql?q=SELECT * FROM federal_election_2013_v2 WHERE premises ILIKE '%QUERY%25' OR polling_place_name ILIKE '%QUERY%25' OR address ILIKE '%QUERY%25'" remote-url-wait-ms="500" on-pt-remote-searching-responded="translateCartoDBResponse" on-pt-item-confirmed="_onPollingPlaceChosen" remote-url-translate-response placeholder="Search for your polling place" max-suggestions="10" required auto-validate error-message="This field is required">
+            </paper-typeahead-input> -->
 
-          <paper-input name="stallName" value="{{stallName}}" label="Stall Name" placeholder="e.g. Primary school sausage sizzle" required auto-validate error-message="This field is required"></paper-input>
-          <paper-input name="stallDescription" value="{{stallDescription}}" label="Stall Description" placeholder="e.g. Sausages, bread rolls, drinks to fund the local cricket team" required auto-validate error-message="This field is required"></paper-input>
+            <paper-input name="stallName" value="{{stallName}}" label="Stall Name" placeholder="e.g. Primary school sausage sizzle" required auto-validate error-message="This field is required"></paper-input>
+            <paper-input name="stallDescription" value="{{stallDescription}}" label="Stall Description" placeholder="e.g. Sausages, bread rolls, drinks to fund the local cricket team" required auto-validate error-message="This field is required"></paper-input>
 
-          <paper-card class="pink fancy" id="deliciousness-metrics" elevation="0">
-            <div class="card-title">
-              <h3 class="pink">Deliciousness Metrics</h3>
-            </div>
-
-            <div class="card-content">
-              <div class="horizontal-section">
-                <paper-toggle-button name="hasBBQ" checked="{{hasBBQ}}">Is this a sausage sizzle?</paper-toggle-button>
-                <paper-toggle-button name="hasCaek" checked="{{hasCaek}}">Is this a cake stall?</paper-toggle-button>
-                <paper-toggle-button name="hasVego" checked="{{hasVego}}">Are there vegetarian options?</paper-toggle-button>
-                <paper-toggle-button name="hasHalal" checked="{{hasHalal}}">Are there halal options?</paper-toggle-button>
+            <paper-card class="pink fancy" id="deliciousness-metrics" elevation="0">
+              <div class="card-title">
+                <h3 class="pink">Deliciousness Metrics</h3>
               </div>
-            </div>
-          </paper-card>
 
-          <paper-input name="stallWebsite" value="{{stallWebsite}}" label="Website" placeholder="A link is included on your individual stall page back to your site"></paper-input>
-          <paper-input name="contactEmail" value="{{contactEmail}}" label="Contact Email" placeholder="Include your email if you want to be notified when your submission is approved"></paper-input>
+              <div class="card-content">
+                <div class="horizontal-section">
+                  <paper-toggle-button name="hasBBQ" checked="{{hasBBQ}}">Is this a sausage sizzle?</paper-toggle-button>
+                  <paper-toggle-button name="hasCaek" checked="{{hasCaek}}">Is this a cake stall?</paper-toggle-button>
+                  <paper-toggle-button name="hasVego" checked="{{hasVego}}">Are there vegetarian options?</paper-toggle-button>
+                  <paper-toggle-button name="hasHalal" checked="{{hasHalal}}">Are there halal options?</paper-toggle-button>
+                </div>
+              </div>
+            </paper-card>
 
-          <paper-button tabindex="0" raised class="colorful" on-tap="submitStall">Submit Your Stall</paper-button>
-          <!-- url="https://democracy-sausage.cartodb.com/api/v2/sql" -->
-          <iron-ajax
-            url="http://v2.democracysausage.org/php/cartodb-api-bridge.php"
-            params='{{ajaxParams}}'
-            handle-as="json"
-            on-response="handleResponse"
-            on-error="handleError"></iron-ajax>
+            <paper-input name="stallWebsite" value="{{stallWebsite}}" label="Website" placeholder="A link is included on your individual stall page back to your site"></paper-input>
+            <paper-input name="contactEmail" value="{{contactEmail}}" label="Contact Email" placeholder="Include your email if you want to be notified when your submission is approved"></paper-input>
 
-          <paper-spinner id="spinner"></paper-spinner>
-          <!-- https://elements.polymer-project.org/elements/paper-toast -->
-          <paper-toast duration="10000" text="Stall information received. Sausagelicious!">
-            <!-- <span role="button" tabindex="0" style="color: #eeff41;margin: 10px" onclick="closeToast('#toast2')">Retry</span> -->
-          </paper-toast>
-        </form>
-      </div>
-    </paper-card>
+            <paper-button tabindex="0" raised class="colorful" on-tap="submitStall">Submit Your Stall</paper-button>
+            <!-- url="https://democracy-sausage.cartodb.com/api/v2/sql" -->
+            <iron-ajax
+              url="http://v2.democracysausage.org/php/cartodb-api-bridge.php"
+              params='{{ajaxParams}}'
+              handle-as="json"
+              on-response="handleResponse"
+              on-error="handleError"></iron-ajax>
+
+            <paper-spinner id="spinner"></paper-spinner>
+            <!-- https://elements.polymer-project.org/elements/paper-toast -->
+            <paper-toast duration="10000" text="Stall information received. Sausagelicious!">
+              <!-- <span role="button" tabindex="0" style="color: #eeff41;margin: 10px" onclick="closeToast('#toast2')">Retry</span> -->
+            </paper-toast>
+          </form>
+        </div>
+      </paper-card>
+    </template>
+
+    <template is="dom-if" if="{{!election}}">
+      <paper-card heading="There are no elections at the moment" class="pink" elevation="0">
+        <div class="card-content">
+          We salute your passion for Democracy Sausage, but unfortuntaely there aren't currently any elections upcoming in Australia :(
+        </div>
+      </paper-card>
+    </template>
   </template>
 </dom-module>
 
@@ -221,7 +231,7 @@
           this.ajaxParams = {
             'add-stall': true,
             'q': '(elections_cartodb_id, polling_place_cartodb_id, polling_place_premises, stall_name, stall_description, stall_website, contact_email, has_bbq, ' +
-                  'has_caek, has_vego, has_halal) VALUES (' + app.election.cartodb_id + ', \'' + this.pollingPlaceCartoDBId + '\', \'' + this.pollingPlacePremises + '\', \'' +
+                  'has_caek, has_vego, has_halal) VALUES (' + this.election.cartodb_id + ', \'' + this.pollingPlaceCartoDBId + '\', \'' + this.pollingPlacePremises + '\', \'' +
                   this.stallName + '\', \'' + this.stallDescription + '\', \'' + this.stallWebsite + '\', \'' + this.contactEmail + '\', ' + this.hasBBQ + ', ' +
                   this.hasCaek + ', ' + this.hasVego + ', ' + this.hasHalal + ')'
           };
