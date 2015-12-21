@@ -39,6 +39,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     page('/', function() {
       app.route = 'home';
+      app.fire('iron-signal', {name: 'track-page', data: { path: "/" } });
     });
 
     page(app.baseUrl, function() {
@@ -47,33 +48,40 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     page('/add-stall', function() {
       app.route = 'add-stall';
+      app.fire('iron-signal', {name: 'track-page', data: { path: "/add-stall" } });
     });
 
     page('/polling-place-editor', function() {
       app.route = 'polling-place-editor';
+      app.fire('iron-signal', {name: 'track-page', data: { path: "/polling-place-editor" } });
     });
 
     page('/pending-stalls', function() {
       // This feels like a horrid hack
       document.querySelector('pending-stalls')._onShow();
       app.route = 'pending-stalls';
+      app.fire('iron-signal', {name: 'track-page', data: { path: "/pending-stalls" } });
     });
 
     page('/about-us', function() {
       app.route = 'about-us';
+      app.fire('iron-signal', {name: 'track-page', data: { path: "/about-us" } });
     });
 
     page('/media', function() {
       app.route = 'media';
+      app.fire('iron-signal', {name: 'track-page', data: { path: "/media" } });
     });
 
     page('/login', function() {
       app.route = 'login';
+      app.fire('iron-signal', {name: 'track-page', data: { path: "/login" } });
       window.location = 'http://v2.democracysausage.org/php/login.php';
     });
 
     page('/login/go', function() {
       app.route = 'login';
+      app.fire('iron-signal', {name: 'track-page', data: { path: "/login-go" } });
       app.admin = true;
     });
 

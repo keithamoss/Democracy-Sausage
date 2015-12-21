@@ -12,7 +12,8 @@
     "google-map": "GoogleWebComponents/google-map",
     "social-post-icons": "~0.2.0",
     "paper-typeahead-input": "",
-    "geo-location": "~1.0.1"
+    "geo-location": "~1.0.1",
+    "start-google-analytics-tracker": "~1.1.1"
   },
   "devDependencies": {
     "web-component-tester": "*"

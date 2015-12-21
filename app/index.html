@@ -165,7 +165,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <span class="flex"></span>
 
           <!-- Toolbar icons -->
-          <cartodb-nokia-place-search-typeahead on-place-chosen="_onGeoSearchResults" hidden></cartodb-nokia-place-search-typeahead>
+          <cartodb-nokia-place-search-typeahead on-place-chosen="_onGeoSearchPlaceChosen" hidden></cartodb-nokia-place-search-typeahead>
           <paper-icon-button icon="search" on-click="_onGeoSearchClick" title="Search for a place, suburb, or address"></paper-icon-button>
 
           <paper-icon-button icon="maps:my-location" on-click="_onGeoLocationClick" title="Zoom to your current location"></paper-icon-button>
@@ -280,8 +280,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <section data-route="login" class="login">
 
             </section>
-
-            <!-- <geo-location latitude="{{latitude}}" longitude="{{longitude}}"></geo-location> -->
           </iron-pages>
         </div>
       </paper-header-panel>
@@ -290,6 +288,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <paper-toast id="toast">
       <span class="toast-hide-button" role="button" tabindex="0" onclick="app.$.toast.hide()">Ok</span>
     </paper-toast>
+
+    <start-google-analytics-tracker code="UA-48888573-1"></start-google-analytics-tracker>
 
     <!-- Uncomment next block to enable Service Worker support (1/2) -->
     <!--
@@ -336,10 +336,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }, 500);
     }
 
-    app._onGoogleMapSearchResults = function() {
-      console.log('_onGoogleMapSearchResults');
-    };
-
     app._onElectionChosen = function(e, payload) {
       // console.log('_onElectionChosen', payload.election);
       app.mapConfig = {'latitude': payload.election.lat, 'longitude': payload.election.lng};
@@ -357,15 +353,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     app._onGeoSearchClick = function() {
       document.querySelector('cartodb-nokia-place-search-typeahead').hidden = false;
+      app.fire('iron-signal', {name: 'track-event', data: {category: "messages", action: "geo-places-search-click", label: "group", value: 1}});
     };
 
-    app._onGeoSearchResults = function(e, payload) {
-      console.log('_onGeoSearchResults');
-      console.log(payload.place);
+    app._onGeoSearchPlaceChosen = function(e, payload) {
+      // console.log('_onGeoSearchPlaceChosen');
+      // console.log(payload.place);
       app.mapConfig = {'latitude': payload.place.position[0], 'longitude': payload.place.position[1]};
+      app.fire('iron-signal', {name: 'track-event', data: {category: "messages", action: "geo-places-search-place-chosen", label: "group", value: 1}});
     };
 
     app._onGeoLocationClick = function() {
+      app.fire('iron-signal', {name: 'track-event', data: {category: "messages", action: "geolocation-click", label: "group", value: 1}});
+
       var geoLocation = document.createElement('geo-location');
 
       // Not sure if this actually works...
@@ -373,11 +373,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       Polymer.dom(this.root).appendChild(geoLocation);
 
       geoLocation.addEventListener('geo-response', function(e) {
+        app.fire('iron-signal', {name: 'track-event', data: {category: "messages", action: "geolocation-success", label: "group", value: 1}});
         app.mapConfig = {'latitude': e.detail.latitude, 'longitude': e.detail.longitude};
       });
       geoLocation.addEventListener('geo-error', function(e) {
         console.log('geo-error');
         console.log(e.detail);
+        app.fire('iron-signal', {name: 'track-event', data: {category: "messages", action: "geolocation-failure", label: "group", value: 1}});
       });
     };
 
