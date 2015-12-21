@@ -22,7 +22,13 @@
       is: 'polling-place-typeahead',
       _onRemoteResponded: function(e) {
         // Translate from CartoDB to the expected "array of objects"
-        e.detail.remoteMatched = e.detail.remoteMatched.rows;
+
+        var results = e.detail.remoteMatched.rows;
+        for(key in results) {
+          results[key].title = results[key].polling_place_name;
+          results[key].subtitle = results[key].premises;
+        }
+        e.detail.remoteMatched = results;
       },
       _onPollingPlaceChosen: function(e) {
         this.fire('polling-place-chosen', {pollingPlace: e.detail.feature});

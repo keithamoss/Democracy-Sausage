@@ -1,0 +1,48 @@
+<!--
+There's nothing in the CartoDB ToS that seems to forbid modifying how the Nokia Here Maps places
+API is used, so hopefully this is OK :)
+-->
+
+<!-- Custom elements -->
+<link rel="import" href="../../../bower_components/paper-typeahead-input/paper-typeahead-input.html">
+
+<dom-module id="cartodb-nokia-place-search-typeahead">
+  <style>
+  paper-typeahead-input {
+    width: 20%;
+    min-width: 250px;
+  }
+
+  paper-typeahead-input ::content paper-input #input {
+    color: white;
+  }
+  </style>
+  <template>
+    <paper-typeahead-input remote-url="http://places.nlp.nokia.com/places/v1/discover/search/?q=%QUERY%25&app_id=KuYppsdXZznpffJsKT24&at=-25,134&app_code=A7tBPacePg9Mj_zghvKt9Q&Accept-Language=en-US&format=json" remote-url-wait-ms="500" on-pt-remote-searching-responded="_onRemoteResponded" on-pt-item-confirmed="_onPlaceChosen" remote-url-translate-response placeholder="" max-suggestions="10" autofocus="true">
+    </paper-typeahead-input>
+  </template>
+</dom-module>
+
+<script>
+  (function() {
+    Polymer({
+      is: 'cartodb-nokia-place-search-typeahead',
+      _onRemoteResponded: function(e) {
+        // Translate to the expected "array of objects"
+
+        var results = e.detail.remoteMatched.results.items;
+        for(key in results) {
+          results[key].subtitle = results[key].vicinity.replace(/<br\/>/g, ', ');
+        }
+        e.detail.remoteMatched = results;
+      },
+      _onPlaceChosen: function(e) {
+        this.fire('place-chosen', {place: e.detail.feature});
+        document.querySelector('cartodb-nokia-place-search-typeahead').hidden = true;
+      },
+      // _onBlur: function() {
+      //   document.querySelector('cartodb-nokia-place-search-typeahead').hidden = true;
+      // }
+    });
+  })();
+</script>
