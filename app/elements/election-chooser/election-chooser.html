@@ -63,7 +63,13 @@
         alert('Bother, something went wrong.');
       },
       _onSelect: function(/*e, payload*/) {
-        app.election = this.elections[document.querySelector('paper-listbox').selected];
+        // console.log('_onSelect');
+        this.fire('election-chosen', {election: this.elections[document.querySelector('paper-listbox').selected]});
+
+        // app.election = this.elections[document.querySelector('paper-listbox').selected];
+        // app.mapConfig.latitude = app.election.lat;
+        // app.mapConfig.longitude = app.election.lng;
+        // console.log(app.mapConfig);
         // console.log("_onSelect", app.election);
       },
       properties: {

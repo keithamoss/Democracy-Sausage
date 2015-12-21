@@ -77,7 +77,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         <!-- Drawer Content -->
         <paper-menu class="list">
-          <election-chooser></election-chooser>
+          <election-chooser on-election-chosen="_onElectionChosen"></election-chooser>
           <!-- <election-layers election="{{election}}"></election-layers> -->
 
           <a data-route="home" href="{{baseUrl}}" selected>
@@ -166,7 +166,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           <!-- Toolbar icons -->
           <paper-icon-button icon="search" disabled></paper-icon-button>
-          <paper-icon-button icon="maps:my-location" disabled></paper-icon-button>
+          <paper-icon-button icon="maps:my-location" on-click="_onGeoClick"></paper-icon-button>
 
           <!-- Application name -->
           <div class="middle middle-container center horizontal layout">
@@ -206,7 +206,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <paper-ripple recenters></paper-ripple>
               </paper-card> -->
 
-              <carto-map username='democracy-sausage' viz='{{election.cartodb_map_id}}' zoom='{{election.default_zoom_level}}' lng='{{election.lng}}' lat='{{election.lat}}'></carto-map>
+              <!-- <carto-map username='democracy-sausage' viz='{{election.cartodb_map_id}}' zoom='{{election.default_zoom_level}}' lng='{{election.lng}}' lat='{{election.lat}}'></carto-map> -->
+
+              <carto-map username='democracy-sausage' viz='{{election.cartodb_map_id}}' zoom='{{election.default_zoom_level}}' lat='{{mapConfig.latitude}}' lng='{{mapConfig.longitude}}'></carto-map>
             </section>
 
             <section data-route="add-stall" class="add-stall">
@@ -276,6 +278,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <section data-route="login" class="login">
 
             </section>
+
+            <!-- <geo-location latitude="{{latitude}}" longitude="{{longitude}}"></geo-location> -->
           </iron-pages>
         </div>
       </paper-header-panel>
@@ -305,7 +309,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </template>
 
   <script>
+    // app.mapConfig = {};
+    // app.mapConfig = {latitude: null, longitude: null};
     app.currentElection = null;
+    // console.log(app.carp, app, this.carp);
+    // app.carp = 2;
+    // console.log(app.carp);
 
     app.admin = false;
     if(window.location.hostname === "localhost" && window.location.port === "5000") {
@@ -325,6 +334,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }, 500);
     }
 
+    app._onElectionChosen = function(e, payload) {
+      // console.log('_onElectionChosen', payload.election);
+      app.mapConfig = {'latitude': payload.election.lat, 'longitude': payload.election.lng};
+      app.election = payload.election;
+    };
 
     app._onUnauthorisedUser = function(response) {
       if(response.request.status === 403) {
@@ -333,6 +347,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       } else {
         alert(response.error);
       }
+    };
+
+    app._onGeoClick = function() {
+      var geoLocation = document.createElement('geo-location');
+
+      // Not sure if this actually works...
+      Polymer.dom(geoLocation).setAttribute('highAccuracy', true);
+      Polymer.dom(this.root).appendChild(geoLocation);
+
+      geoLocation.addEventListener('geo-response', function(e) {
+        app.mapConfig = {'latitude': e.detail.latitude, 'longitude': e.detail.longitude};
+      });
+      geoLocation.addEventListener('geo-error', function(e) {
+        console.log('geo-error');
+        console.log(e.detail);
+      });
     };
 
     app.renderInfoWindow = function(data) {

@@ -11,7 +11,8 @@
     "paper-menu": "PolymerElements/paper-menu#4fecb43601",
     "google-map": "GoogleWebComponents/google-map",
     "social-post-icons": "~0.2.0",
-    "paper-typeahead-input": ""
+    "paper-typeahead-input": "",
+    "geo-location": "~1.0.1"
   },
   "devDependencies": {
     "web-component-tester": "*"

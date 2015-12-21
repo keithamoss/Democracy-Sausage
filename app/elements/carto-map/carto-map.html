@@ -40,18 +40,20 @@
         },
         lat: {
           type: Number,
-          notify: true
-        },
-        zoom: {
-          type: Number,
-          notify: true
         },
         lng: {
           type: Number,
-          notify: true
+        },
+        zoom: {
+          type: Number,
+          // notify: true
         }
       },
+      observers: [
+        '_locChanged(lat, lng)',
+      ],
       _vizChanged: function(newValue, oldValue) {
+        // console.log('_vizChanged');
         // This approach didn't work for some reason - the map never init'd
         // console.log('this.$.map', this.$.map);
         // this.$.map.remove();
@@ -70,20 +72,36 @@
 
         this.createVizJSON();
       },
+      // It's a bit suboptimal, but this fires twice when changing elections or doing geolocation
+      // because its only validity check is that all properties !== undefined.
+      // Whatever, it still works. Would be nice if Polymer supported something a bit more like
+      // "watch these properties for changes and only fire the event once if the change is from the same assignment op".
+      // But I guess we can do that if we pass a whole object like mapConfig(lat, lon) in, but that obscures the
+      // properties on <carto-map> a bit too much.
+      _locChanged: function(newValue, oldValue) {
+        // console.log('_locChanged', this.lat, this.lng, this.viz);
+        if(this.nativeMap && this.lat !== undefined && this.lng !== undefined) {
+          // console.log('fitBounds');
+          this.nativeMap.fitBounds(new L.latLngBounds([new L.latLng(this.lat, this.lng)]), {maxZoom: 15});
+        }
+      },
       updateLoc: function() {
-        // console.log(this.lat, this.lng, this.zoom);
-        this.nativeMap.setView(new L.LatLng(this.lat, this.lng), this.zoom);
+        // console.log('updateLoc', this.lat, this.lng, this.zoom);
+        if(this.lat !== null && this.lng !== null) {
+          this.nativeMap.setView(new L.LatLng(this.lat, this.lng), this.zoom);
+        }
       },
       mapMoved: function(e) {
-        var center = this.nativeMap.getCenter();
-        this.lat = center.lat;
-        this.lng = center.lng;
-        // console.log(this.nativeMap.getCenter(), this.nativeMap.getZoom());
+        // This stuffs up the _locChanged listener
+        // var center = this.nativeMap.getCenter();
+        // this.lat = center.lat;
+        // this.lng = center.lng;
       },
       constructVizURL() {
         return 'https://' + this.username + '.cartodb.com/api/v2/viz/' + this.viz + '/viz.json';
       },
       createVizJSON() {
+        // console.log('createVizJSON', this.viz, this.lat, this.lng);
         var url = this.vizurl ? this.vizurl : this.constructVizURL();
         // cartodb.createVis(this.$.map, url)
         cartodb.createVis(document.querySelector('#carto-map'), url)
