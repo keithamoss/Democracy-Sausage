@@ -53,7 +53,16 @@
         '_locChanged(lat, lng)',
       ],
       _vizChanged: function(newValue, oldValue) {
-        // console.log('_vizChanged');
+        if(this.map === undefined) {
+          this.createVizJSON();
+        } else {
+          this.subLayer.setSQL("select * from " + app.election.db_table_name);
+          this.updateLoc();
+        }
+
+        // No longer required now that we're just changing the layer SQL query to
+        // toggle between elections.
+        /*
         // This approach didn't work for some reason - the map never init'd
         // console.log('this.$.map', this.$.map);
         // this.$.map.remove();
@@ -71,6 +80,7 @@
         Polymer.dom(this.root).appendChild(toLocal);
 
         this.createVizJSON();
+        */
       },
       // It's a bit suboptimal, but this fires twice when changing elections or doing geolocation
       // because its only validity check is that all properties !== undefined.
@@ -102,7 +112,10 @@
       },
       createVizJSON() {
         // console.log('createVizJSON', this.viz, this.lat, this.lng);
-        var url = this.vizurl ? this.vizurl : this.constructVizURL();
+
+        // var url = this.vizurl ? this.vizurl : this.constructVizURL();
+        var url = 'https://democracy-sausage.cartodb.com/api/v2/viz/45dc4e4a-a7f2-11e5-8c95-0ea31932ec1d/viz.json';
+
         // cartodb.createVis(this.$.map, url)
         cartodb.createVis(document.querySelector('#carto-map'), url)
           .done(function(map, layers) {
@@ -115,8 +128,8 @@
             Custom info windows in CartoDB are...interesting.
 
             There are a variety of ways documented of how you set a custom info window,
-            and how varies on whether you're dynamically adding a layer or using a viz.json
-            pre-built on cartodb.com
+            and how you do so varies on whether you're dynamically adding a layer or using a
+            viz.json pre-built on cartodb.com
 
             NB: In future it may pay to build our own layers directly so we can (a) avoid the process of
             creating a new map for each election (CartoCSS, SQL queries et cetera would all be defined in code),
@@ -132,24 +145,81 @@
             to run JavaScript and taking care of all of the logic and view presentation in app.renderInfoWindow.
 
             Eh, it works for now!
+
+
+            # Part 2 - In which we try to create our own map and layers using CartoDB.js (and lose a day of our life we aren't getting back)
+            Bloody hell the CartoDB.js is a bit rubbish if you're trying to entirely create your own map and layers!
+
+            The whole interactivity setting thing is just stuffed. There's umpteen different ways of doing it and the documentation
+            for them is impenetrable, Ditto layer vs sublayer and createViz vs createLayer.
+
+            Resources consulted, attempted, and discarded - but they may still be worth reading if we ever revisit.
+
+            (I hope not, though)
+
+            - http://academy.cartodb.com/courses/cartodbjs-ground-up/createvis-vs-createlayer/
+            - https://github.com/CartoDB/cartodb.js/blob/2983b2fdcef914afdb1f4fdae173471143930452/examples/custom_infowindow.html
+            - https://github.com/CartoDB/cartodb.js/blob/2983b2fdcef914afdb1f4fdae173471143930452/examples/leaflet_multilayer.html
+            - https://github.com/CartoDB/cartodb.js/blob/2983b2fdcef914afdb1f4fdae173471143930452/examples/layer_toggle.html
+            - https://github.com/CartoDB/cartodb.js/blob/develop/examples/new-infowindow.html
+            - https://github.com/CartoDB/cartodb.js/blob/develop/examples/sublayer.html
+
+            NB: Examples are hosted at http://cartodb.github.io/cartodb.js/examples/
             */
 
             var subLayer = layers[1].getSubLayer(0);
+            // console.log("select * from " + app.election.db_table_name);
+            subLayer.setSQL("select * from " + app.election.db_table_name);
+            this.subLayer = subLayer;
+
             // subLayer.set({ 'interactivity': ['cartodb_id', 'address', 'polling_place_name'] });
             subLayer.setInteractivity('cartodb_id, polling_place_name, premises, state, address, booth_info, extra_info, division, has_bbq, ' +
                                       'has_caek, has_nothing, has_run_out, has_other, source, stall_name, stall_description, stall_website');
 
+              var INFOWINDOW_TEMPLATE = [
+                '<div class="cartodb-popup header blue v2">',
+                '  <a href="#close" class="cartodb-popup-close-button close">x</a>',
+                '   <div class="cartodb-popup-header">',
+                '     <h1>{{content.data.premises}}</h1>',
+                '   </div>',
+                '   <div class="cartodb-popup-content-wrapper">',
+                '     <div class="cartodb-popup-content">',
+                '       <div id="chart_div">',
+                '       <script>',
+                '         $(".cartodb-popup-content").html(app.renderInfoWindow(app.infoWindowData));',
+                '       </scr' + 'ipt>',
+                '       </div>',
+                '     </div>',
+                '   </div>',
+                '   <div class="cartodb-popup-tip-container"></div>',
+                '</div>'].join('');
+
             subLayer.infowindow.set({
-              template: $('#infowindow_template').html(),
+              template: INFOWINDOW_TEMPLATE,
               sanitizeTemplate: false
             });
 
             subLayer.on('featureClick', function(e, latlng, pos, data, layerNumber) {
               app.infoWindowData = data;
             });
+
+            // var i = new cdb.geo.ui.InfoBox({
+            //     layer: layers[1],
+            //     template: '<h3>{{cartodb_id}}</h3><p>more info</p>',
+            //     width: 200,
+            //     position: 'bottom|right'
+            // });
+            // $('body').append(i.render().el);
+
+            // wait a little bit and add the most populated places
+            // setTimeout(function() {
+            //   console.log('setSQL');
+            //   subLayer.setSQL("select * from qld_2015_polling_places")
+            // }, 5000);
           }.bind(this));
       },
       constructBlankMap() {
+        console.log('constructBlankMap');
         /*var */map = new L.Map('map_canvas', {
           center: [0,0],
           zoom: 2

@@ -453,23 +453,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     };
   </script>
 
-  <script type="infowindow/html" id="infowindow_template">
-    <div class="cartodb-popup header blue v2">
-      <a href="#close" class="cartodb-popup-close-button close">x</a>
-      <div class="cartodb-popup-header">
-        <h1>{{content.data.premises}}</h1>
-      </div>
-       <div class="cartodb-popup-content-wrapper">
-         <div class="cartodb-popup-content">
-          <script>
-            $(".cartodb-popup-content").html(app.renderInfoWindow(app.infoWindowData));
-          </script>
-         </div>
-       </div>
-   <div class="cartodb-popup-tip-container"></div>
-    </div>
-  </script>
-
   <!-- build:js scripts/app.js -->
   <script src="scripts/app.js"></script>
   <!-- endbuild-->
