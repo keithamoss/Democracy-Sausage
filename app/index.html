@@ -319,7 +319,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     // console.log(app.carp);
 
     app.admin = false;
-    if(window.location.hostname === "localhost" && window.location.port === "5000") {
+    if(window.location.hostname === "localhost" && (window.location.port === "5000" || window.location.port === "5001")) {
       app.admin = true;
     }
     if(document.cookie.indexOf("PHPSESSID=") === 0) {
