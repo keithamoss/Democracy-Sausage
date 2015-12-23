@@ -29,7 +29,9 @@
       <paper-dropdown-menu label="Choose an election">
         <paper-listbox class="dropdown-content" on-iron-select="_onSelect" selected="0">
           <template is="dom-repeat" items="{{elections}}" as="election">
-            <paper-item disabled="{{!election.db_table_name}}">{{election.name}}</paper-item>
+            <template is="dom-if" if="{{!election.hidden}}">
+              <paper-item>{{election.name}}</paper-item>
+            </template>
           </template>
         </paper-listbox>
       </paper-dropdown-menu>
