@@ -332,8 +332,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     app.pendingStallsCount = "";
     if(app.admin === true) {
       var intervalId = window.setInterval(function() {
-        console.log('Checking...');
-        if(document.querySelector('pending-stalls') !== undefined) {
+        if(typeof document.querySelector('pending-stalls') === 'object') {
           document.querySelector('pending-stalls')._onShow();
           window.clearInterval(intervalId);
         }
