@@ -80,10 +80,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <election-chooser on-election-chosen="_onElectionChosen"></election-chooser>
           <!-- <election-layers election="{{election}}"></election-layers> -->
 
-          <!-- <a data-route="home" href="{{baseUrl}}" selected>
+          <a data-route="home" href="{{baseUrl}}" selected>
             <iron-icon icon="maps:layers"></iron-icon>
             <span>Sausage Map</span>
-          </a> -->
+          </a>
 
           <!-- <a data-route="admin" href="admin" disabled>
             <iron-icon icon="maps:layers"></iron-icon>
@@ -332,7 +332,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     app.pendingStallsCount = "";
     if(app.admin === true) {
       var intervalId = window.setInterval(function() {
-        if(typeof document.querySelector('pending-stalls') === 'object') {
+        console.log(document.querySelector('pending-stalls'), typeof document.querySelector('pending-stalls'));
+        if(typeof document.querySelector('pending-stalls') !== null) {
           document.querySelector('pending-stalls')._onShow();
           window.clearInterval(intervalId);
         }
