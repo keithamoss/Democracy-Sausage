@@ -210,7 +210,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
               <!-- <carto-map username='democracy-sausage' viz='{{election.cartodb_map_id}}' zoom='{{election.default_zoom_level}}' lng='{{election.lng}}' lat='{{election.lat}}'></carto-map> -->
 
-              <carto-map username='democracy-sausage' viz='{{election.cartodb_map_id}}' zoom='{{election.default_zoom_level}}' lat='{{mapConfig.latitude}}' lng='{{mapConfig.longitude}}'></carto-map>
+              <carto-map username='democracy-sausage' viz='{{election.cartodb_id}}' zoom='{{mapConfig.zoom_level}}' lat='{{mapConfig.latitude}}' lng='{{mapConfig.longitude}}'></carto-map>
             </section>
 
             <section data-route="add-stall" class="add-stall">
@@ -333,12 +333,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     if(app.admin === true) {
       window.setTimeout(function() {
         document.querySelector('pending-stalls')._onShow();
-      }, 600);
+      }, 700);
     }
 
     app._onElectionChosen = function(e, payload) {
       // console.log('_onElectionChosen', payload.election);
-      app.mapConfig = {'latitude': payload.election.lat, 'longitude': payload.election.lng};
+      app.mapConfig = {'latitude': payload.election.lat, 'longitude': payload.election.lng, 'zoom_level': payload.election.default_zoom_level};
       app.election = payload.election;
     };
 
