@@ -124,6 +124,14 @@
             this.nativeMap.on('move', this.mapMoved.bind(this));
             this.updateLoc();
 
+            // Legend Handling
+            document.querySelector('.cartodb-legend-stack ul').hidden = true;
+            document.querySelector('.toggle_legend').addEventListener('click', function(e) {
+              var legend = document.querySelector('.cartodb-legend-stack ul');
+              legend.hidden = !legend.hidden;
+              e.preventDefault();
+            });
+
             /*
             Custom info windows in CartoDB are...interesting.
 
