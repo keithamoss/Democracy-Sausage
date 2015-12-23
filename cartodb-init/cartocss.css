@@ -1,0 +1,51 @@
+/** Democracy Sausage visualization */
+
+#features_1[has_nothing=true] {
+   marker-file: url(https://s3.amazonaws.com/com.cartodb.users-assets.production/production/democracy-sausage/assets/20150131065445cross.png);
+   marker-width: 24;
+   marker-height: 24;
+   marker-allow-overlap: true;
+}
+
+#features_1[has_bbq=true][has_caek=true] {
+   marker-file: url(https://s3.amazonaws.com/com.cartodb.users-assets.production/production/democracy-sausage/assets/20150131065437sausage%20cake.png);
+   marker-width: 32;
+   marker-height: 29;
+   marker-allow-overlap: true;
+}
+
+#features_1[has_bbq=true] {
+   marker-file: url(https://s3.amazonaws.com/com.cartodb.users-assets.production/production/democracy-sausage/assets/20150131064215sausage.png);
+   marker-width: 32;
+   marker-height: 32;
+   marker-allow-overlap: true;
+}
+
+#features_1[has_caek=true] {
+   marker-file: url(https://s3.amazonaws.com/com.cartodb.users-assets.production/production/democracy-sausage/assets/20150131065451cake.png);
+   marker-width: 32;
+   marker-height: 32;
+   marker-allow-overlap: true;
+}
+
+#features_1[has_bbq=false][has_caek=false][has_nothing=false] {
+   marker-file: url(https://s3.amazonaws.com/com.cartodb.users-assets.production/production/democracy-sausage/assets/20150131070252faq.png);
+   marker-width: 14;
+   marker-height: 14;
+   marker-allow-overlap: true;
+   marker-comp-op: overlay;
+}
+
+/** simple visualization */
+
+/*#test_election_polling_places{
+  marker-fill-opacity: 0.9;
+  marker-line-color: #FFF;
+  marker-line-width: 1;
+  marker-line-opacity: 1;
+  marker-placement: point;
+  marker-type: ellipse;
+  marker-width: 10;
+  marker-fill: #FF6600;
+  marker-allow-overlap: true;
+}*/
