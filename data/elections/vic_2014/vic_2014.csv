@@ -1,4 +1,4 @@
-lon,lat,division,booth_info,premises,opening_hours,has_bbq,address,source,state,polling_place_name,has_nothing,has_caek,extra_info,polling_place_type,has_run_out,has_other,has_run_out,has_other,first_report,latest_report
+lon,lat,division,booth_info,premises,opening_hours,has_bbq,address,source,state,polling_place_name,has_nothing,has_caek,extra_info,polling_place_type,has_run_out,has_other,first_report,latest_report
 144.897222,-37.747457,Niddrie District,,Buckley Park,,1, Cooper Street Essendon 28 C2,,VIC,Buckley Park College,0,0,,,,,,
 145.123717,-37.918205,Clarinda District,,Clayton,,0, 40393 Fregon Road Clayton 79D1,,VIC,Fregon Hall,0,0,,,,,,
 145.082012,-37.935629,Clarinda District,,Heatherton North,,0, 3 Washington Drive Oakleigh South 78 D5,,VIC,Washington Drive Pre-School,0,0,,,,,,
@@ -1550,7 +1550,7 @@ lon,lat,division,booth_info,premises,opening_hours,has_bbq,address,source,state,
 145.276006,-37.9118,Rowville District,,Lysterfield,,1, corner Bellfield and Lakesfield Drives Lysterfield 73 H11,,VIC,Lysterfield Primary School,0,0,,,,,,
 145.090117,-37.827591,Burwood District,,Chatham South,,0, 1 Kent Road Surrey Hills 46 F12,,VIC,Youth With A Mission,0,0,,,,,,
 144.05372,-37.532245,Buninyong District,,Springbank,,0, 738 Springbank Road Springbank 77 B2,,VIC,St Michael's Primary School,0,0,,,,,,
-145.243228,-37.93345,Rowville District,,Heany Park,,1, Buckingham Drive Rowville 82 A5,,VIC,Heany Park Primary School,0,1,Heany Park Primary Schoolï¿½Ûªs 21st Birthday Fete,,,,,
+145.243228,-37.93345,Rowville District,,Heany Park,,1, Buckingham Drive Rowville 82 A5,,VIC,Heany Park Primary School,0,1,Heany Park Primary School¥Ë_—Ès 21st Birthday Fete,,,,,
 144.134053,-37.966004,Buninyong District,,Lethbridge,,0, 25 Russell Street Lethbridge 100 H4,,VIC,Lethbridge Public Hall,0,0,,,,,,
 143.92795,-37.57392,Buninyong District,,Warrenheip,,1, 93 Warrenheip Road Warrenheip 567 Q11,,VIC,Warrenheip Primary School,0,1,,,,,,
 143.99446,-37.55947,Buninyong District,,Bungaree,,0, 234 Bungaree-Wallace Road Bungaree 77 B2,,VIC,Bungaree Mechanics Institute,0,0,,,,,,
