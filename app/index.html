@@ -80,18 +80,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <election-chooser on-election-chosen="_onElectionChosen"></election-chooser>
           <!-- <election-layers election="{{election}}"></election-layers> -->
 
-          <a data-route="home" href="{{baseUrl}}" selected>
+          <!-- <a data-route="home" href="{{baseUrl}}" selected>
             <iron-icon icon="maps:layers"></iron-icon>
             <span>Sausage Map</span>
-          </a>
+          </a> -->
 
-          <a data-route="admin" href="admin" disabled>
+          <!-- <a data-route="admin" href="admin" disabled>
             <iron-icon icon="maps:layers"></iron-icon>
             <span>Heatmap</span>
-          </a>
+          </a> -->
 
           <!-- <a data-route="admin" href="admin" hidden="{{!election.has_division_boundaries}}"> -->
-          <a data-route="admin" href="admin" disabled>
+          <!-- <a data-route="admin" href="admin" disabled>
             <iron-icon icon="maps:layers"></iron-icon>
             <span>Divisions</span>
           </a>
@@ -99,7 +99,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <a data-route="admin" href="admin" disabled>
             <iron-icon icon="maps:layers"></iron-icon>
             <span>Sausagelytics</span>
-          </a>
+          </a> -->
 
           <paper-toolbar id="drawerToolbar" hidden="{{!admin}}">
             <span class="paper-font-title">Sausage Administration</span>
@@ -117,7 +117,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <paper-badge for="pending-stalls" label="{{pendingStallsCount}}" hidden="{{!admin}}">
           </paper-badge>
 
-          <hr>
+          <hr hidden="{{!admin}}">
 
           <a data-route="login" href="login" hidden>
             <span>Login</span>
