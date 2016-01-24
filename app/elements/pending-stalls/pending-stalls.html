@@ -142,7 +142,7 @@
     <!-- url="https://democracy-sausage.cartodb.com/api/v2/sql" -->
     <iron-ajax
       id="getPendingStallList"
-      url="http://v2.democracysausage.org/php/cartodb-api-bridge.php"
+      url="http://democracysausage.org/php/cartodb-api-bridge.php"
       params='{{ajaxParamsPendingStallList}}'
       handle-as="json"
       on-response="handleResponse"
@@ -150,7 +150,7 @@
 
     <iron-ajax
       id="getBoothInfo"
-      url="http://v2.democracysausage.org/php/cartodb-api-bridge.php"
+      url="http://democracysausage.org/php/cartodb-api-bridge.php"
       params='{{ajaxParamsBoothInfo}}'
       handle-as="json"
       on-response="handleBoothInfoResponse"
@@ -158,7 +158,7 @@
 
     <iron-ajax
       id="deleteStall"
-      url="http://v2.democracysausage.org/php/cartodb-api-bridge.php"
+      url="http://democracysausage.org/php/cartodb-api-bridge.php"
       params='{{ajaxParamsDeleteStall}}'
       handle-as="json"
       on-response="handleDeleteStallResponse"
